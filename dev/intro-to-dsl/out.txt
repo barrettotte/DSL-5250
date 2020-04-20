@@ -1,0 +1,12 @@
+==> Running 'LOGIN' stage...
+  - positioning cursor to (6,53)
+  - typing 'OTTEB'
+  - positioning cursor to (7,53)
+  - typing 'PASSWORD'
+==> Running 'TEST' stage...
+  - positioning cursor to (20,7)
+  - typing 'DSPLIBL'
+  - pressing F12
+==> Running 'LOGOFF' stage...
+  - positioning cursor to (20,7)
+  - typing 'SIGNOFF'
