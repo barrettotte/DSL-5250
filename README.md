@@ -23,4 +23,3 @@ TODO:
 
 ## References
 * [Groovy Domain Specific Languages](http://docs.groovy-lang.org/docs/latest/html/documentation/core-domain-specific-languages.html)
-* [Groovy DSL Quickstart](https://www.youtube.com/watch?v=i9pNYW1Pg9A)

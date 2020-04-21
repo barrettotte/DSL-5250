@@ -1,24 +1,18 @@
-import static com.github.barrettotte.dsl.Dsl.automation
-
-// https://www.youtube.com/watch?v=i9pNYW1Pg9A
-
-automation{
-
+{
   environment{
     SYSTEM = "PUB400.COM"
-    USER = "OTTEB"
+    USERNAME = "OTTEB"
+    PASSWORD = "PASSWORD"
   }
-
   stages{
     stage("LOGIN"){
       steps{env->
         position 6,53
-        send "${env.USER}"
+        send "${env.USERNAME}"
         position 7,53
-        send "PASSWORD"
+        send "${env.PASSWORD}",true
       }
     }
-
     stage("TEST"){
       steps{
         position 20,7
@@ -26,13 +20,11 @@ automation{
         cmd 12
       }
     }
-
     stage("LOGOFF"){
       steps{
         position 20,7
         send "SIGNOFF"
       }
     }
-
   }
 }
