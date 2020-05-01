@@ -4,23 +4,23 @@ import groovy.transform.CompileStatic
 import groovy.transform.stc.ClosureParams
 import groovy.transform.stc.SimpleType
 
-import com.github.barrettotte.automation.dsl.StageDsl
-import com.github.barrettotte.automation.dsl.StepsDsl
+import com.github.barrettotte.automation.dsl.StageDefinition
+import com.github.barrettotte.automation.dsl.StepsDefinition
 
 import static groovy.lang.Closure.DELEGATE_ONLY
 
 
 @CompileStatic
-class StageDsl{
+class StageDefinition{
 
     void steps(
-        @DelegatesTo(value=StepsDsl, strategy=DELEGATE_ONLY)
+        @DelegatesTo(value=StepsDefinition, strategy=DELEGATE_ONLY)
         @ClosureParams(value=SimpleType, options=["java.util.Map"]) final Closure closure){
 
-        final StepsDsl steps = new StepsDsl()
+        final StepsDefinition steps = new StepsDefinition()
         
         closure.delegate = steps
         closure.resolveStrategy = DELEGATE_ONLY
-        closure.call(AutomationDsl.env)
+        closure.call(AutomationDefinition.env)
     }
 }

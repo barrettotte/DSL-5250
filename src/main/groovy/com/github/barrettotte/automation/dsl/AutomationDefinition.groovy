@@ -5,8 +5,7 @@ import groovy.transform.CompileStatic
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 
-import com.github.barrettotte.automation.Dsl
-import com.github.barrettotte.automation.dsl.StagesDsl
+import com.github.barrettotte.automation.dsl.StagesDefinition
 import com.github.barrettotte.automation.model.Environment
 import com.github.barrettotte.automation.model.Stage
 
@@ -15,7 +14,7 @@ import static groovy.lang.Closure.DELEGATE_ONLY
 
 
 @CompileStatic
-class AutomationDsl{
+class AutomationDefinition{
     
     protected static final ConcurrentMap<String, Object> env = [:] as ConcurrentHashMap
 
@@ -23,15 +22,15 @@ class AutomationDsl{
         env.with(closure)
     }
 
-    void stages(@DelegatesTo(value=StagesDsl, strategy=DELEGATE_ONLY) final Closure closure){
-        final StagesDsl dsl = new StagesDsl()
-
+    void stages(@DelegatesTo(value=StagesDefinition, strategy=DELEGATE_ONLY) final Closure closure){
+        final StagesDefinition dsl = new StagesDefinition()
+        
         closure.delegate = dsl
         closure.resolveStrategy = DELEGATE_ONLY
         closure.call()
 
         dsl.stages.each{
-            Dsl.runStage(it)
+            Dsl5250.runStage(it)
         }
     }
 

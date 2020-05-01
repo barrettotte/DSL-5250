@@ -11,11 +11,11 @@ import static groovy.lang.Closure.DELEGATE_ONLY
 
 
 @CompileStatic
-class StagesDsl{
+class StagesDefinition{
     
     protected final List<Stage> stages = []
 
-    void stage(final String name, @DelegatesTo(value=StageDsl, strategy=DELEGATE_ONLY) final Closure closure){
+    void stage(final String name, @DelegatesTo(value=StageDefinition, strategy=DELEGATE_ONLY) final Closure closure){
         stages << new Stage(name, closure)
     }
 
