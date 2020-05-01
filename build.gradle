@@ -1,7 +1,7 @@
 buildscript{
     repositories{
         mavenCentral()
-        maven {
+        maven{
 	      url "https://plugins.gradle.org/m2/"
 	    }
     }
@@ -9,6 +9,7 @@ buildscript{
 
 plugins{
 	id 'groovy'
+    id 'codenarc'
 }
 
 group = 'com.barrettotte'
@@ -37,7 +38,7 @@ sourceSets{
 
 test{
 	useJUnitPlatform()
-	testLogging {
+	testLogging{
         exceptionFormat = 'full'
         showExceptions true
         events 'PASSED', 'FAILED', 'SKIPPED'
@@ -53,4 +54,11 @@ test{
               "${result.skippedTestCount} skipped"
         }
     }
+}
+
+[codenarcMain, codenarcTest]*.ignoreFailures = true
+
+codenarc{
+	configFile = file("config/codenarc/codenarc.xml")
+	reportFormat = 'html'
 }

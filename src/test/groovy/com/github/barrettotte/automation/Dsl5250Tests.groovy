@@ -2,16 +2,12 @@ package com.github.barrettotte.automation
 
 import com.github.barrettotte.automation.dsl.Dsl5250
 
-import static org.junit.jupiter.api.Assertions.assertEquals
-
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
-
 
 class Dsl5250Tests{
 
 	@Test
-	void test_eval_manual() {
+	void test_eval_manual(){
 		Dsl5250.eval{
 			environment{
 				SYSTEM = 'PUB400.COM'
@@ -47,7 +43,7 @@ class Dsl5250Tests{
 
 	@Test
 	void test_eval_closure(){
-		final def dsl = closureFromFile('/basic.groovy')
+		final dsl = closureFromFile('/basic.groovy')
 		assert dsl instanceof Closure
 		Dsl5250.eval(dsl)
 	}
@@ -58,9 +54,7 @@ class Dsl5250Tests{
 		Dsl5250.eval(f)
 	}
 
-
-	/****** Utils *******/
-	Closure closureFromFile(final String filename){
+	private Closure closureFromFile(final String filename){
 		return new GroovyShell().evaluate('return ' + this.getClass().getResource(filename).text)
 	}
 

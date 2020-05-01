@@ -1,11 +1,10 @@
 package com.github.barrettotte.automation.dsl
 
+import static groovy.lang.Closure.DELEGATE_ONLY
+
 import com.github.barrettotte.automation.model.Stage
 
 import groovy.transform.CompileStatic
-
-import static groovy.lang.Closure.DELEGATE_ONLY
-
 
 @CompileStatic
 class Dsl5250{

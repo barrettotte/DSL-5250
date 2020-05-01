@@ -1,18 +1,14 @@
 package com.github.barrettotte.automation.dsl
 
-import groovy.transform.CompileStatic
+import static groovy.lang.Closure.DELEGATE_ONLY
 
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ConcurrentMap
+import groovy.transform.CompileStatic
 
 import com.github.barrettotte.automation.model.Stage
 
-import static groovy.lang.Closure.DELEGATE_ONLY
-
-
 @CompileStatic
 class StagesDefinition{
-    
+
     protected final List<Stage> stages = []
 
     void stage(final String name, @DelegatesTo(value=StageDefinition, strategy=DELEGATE_ONLY) final Closure closure){
