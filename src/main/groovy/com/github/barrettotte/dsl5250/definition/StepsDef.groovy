@@ -1,9 +1,9 @@
-package com.github.barrettotte.automation.dsl
+package com.github.barrettotte.dsl5250.definition
 
 import groovy.transform.CompileStatic
 
 @CompileStatic
-class StepsDefinition{
+class StepsDef{
 
     void position(final int x, final int y){
         printStep "positioning cursor to ($x,$y)"

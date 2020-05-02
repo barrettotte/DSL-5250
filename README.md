@@ -20,3 +20,7 @@ TODO:
 ## References
 * [Groovy Domain Specific Languages](http://docs.groovy-lang.org/docs/latest/html/documentation/core-domain-specific-languages.html)
 * [Groovy DSL Builders](https://medium.com/@musketyr/groovy-dsl-builders-1-the-concept-2d5a97fa0a51)
+* [IBM Emulator Programming](https://www.ibm.com/support/knowledgecenter/SSEQ5Y_5.9.0/com.ibm.pcomm.doc/books/html/emulator_programming08.htm)
+* Searching around for RUMBA and VBA gave a lot of references
+* [Dependency Walker](http://www.dependencywalker.com/)
+

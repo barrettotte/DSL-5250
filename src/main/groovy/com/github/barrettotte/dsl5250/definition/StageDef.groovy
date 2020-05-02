@@ -1,4 +1,4 @@
-package com.github.barrettotte.automation.dsl
+package com.github.barrettotte.dsl5250.definition
 
 import static groovy.lang.Closure.DELEGATE_ONLY
 
@@ -7,17 +7,17 @@ import groovy.transform.stc.ClosureParams
 import groovy.transform.stc.SimpleType
 
 @CompileStatic
-class StageDefinition{
+class StageDef{
 
     void steps(
-        @DelegatesTo(value=StepsDefinition, strategy=DELEGATE_ONLY)
+        @DelegatesTo(value=StepsDef, strategy=DELEGATE_ONLY)
         @ClosureParams(value=SimpleType, options=['java.util.Map']) final Closure closure){
 
-        final StepsDefinition steps = new StepsDefinition()
+        final StepsDef steps = new StepsDef()
 
         closure.delegate = steps
         closure.resolveStrategy = DELEGATE_ONLY
-        closure.call(AutomationDefinition.env)
+        closure.call(AutomationDef.env)
     }
 
 }

@@ -1,4 +1,4 @@
-package com.github.barrettotte.automation.model
+package com.github.barrettotte.dsl5250.model
 
 import groovy.transform.CompileStatic
 

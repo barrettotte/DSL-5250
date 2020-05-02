@@ -1,14 +1,16 @@
-package com.github.barrettotte.automation
+package com.github.barrettotte.dsl5250
 
-import com.github.barrettotte.automation.dsl.Dsl5250
+import com.github.barrettotte.dsl5250.utils.Dsl5250Utils
 
 import org.junit.jupiter.api.Test
 
 class Dsl5250Tests{
 
+	private final Dsl5250 dsl = new Dsl5250()
+
 	@Test
 	void test_eval_manual(){
-		Dsl5250.eval{
+		dsl.eval{
 			environment{
 				SYSTEM = 'PUB400.COM'
 				USERNAME = 'OTTEB'
@@ -42,20 +44,9 @@ class Dsl5250Tests{
 	}
 
 	@Test
-	void test_eval_closure(){
-		final dsl = closureFromFile('/basic.groovy')
-		assert dsl instanceof Closure
-		Dsl5250.eval(dsl)
-	}
-
-	@Test
 	void test_eval_file(){
-		final File f = new File(this.getClass().getResource('/basic.groovy').toURI())
-		Dsl5250.eval(f)
-	}
-
-	private Closure closureFromFile(final String filename){
-		return new GroovyShell().evaluate('return ' + this.getClass().getResource(filename).text)
+		final f = Dsl5250Utils.closureFromFile(this.getClass().getResource('/basic.groovy'))
+		dsl.eval(f)
 	}
 
 }
