@@ -30,6 +30,7 @@ I **think** none of this will work because I'm trying to use a 32-bit DLL in 64-
 
 
 ## Possible Approaches
+* Open 32-bit DLL with JRuby
 * Homebrew up something - reading windows using JNA https://stackoverflow.com/questions/54353050/can-i-read-text-from-another-window-using-java
 * [COM4J](https://github.com/kohsuke/com4j)
 * DSL generates HOD macros - https://www.ibm.com/support/knowledgecenter/SSS9FA_11.0.0/com.ibm.hod.doc/doc/macro/macro.html?cp=SSS9FA_11.0.0/7
