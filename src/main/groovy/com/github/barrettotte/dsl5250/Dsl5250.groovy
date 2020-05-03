@@ -18,7 +18,6 @@ class Dsl5250{
         //Ehlapi32.INSTANCE.wd_ConnectPS(int hInstance, String shortName)
         //System.setProperty('jna.library.path', 'C:/Program Files (x86)/IBM/EHLLAPI/')
         //this.ehlapi32 = (Ehlapi32) Native.loadLibrary('enlapi32', Ehlapi32.class)
-        println 'Hello'
     }
     
     void eval(final File f){

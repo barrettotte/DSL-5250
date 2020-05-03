@@ -29,4 +29,7 @@ public class Main{
         println "status: ${status}" 
     }
 
+    // also put EHLAPI32.dll in src/main/resources
+    // not a valid win32 application   >:(
+
 }

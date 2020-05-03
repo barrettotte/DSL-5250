@@ -26,21 +26,23 @@ repositories{
 
 dependencies{
 	implementation 'org.codehaus.groovy:groovy-all:3.0.3'
+
     implementation 'net.java.dev.jna:jna:5.5.0'
+    implementation 'net.java.dev.jna:jna-platform:5.5.0'
 
 	testImplementation('org.junit.jupiter:junit-jupiter:5.6.2')
 }
 
-sourceSets{
-    main{
-        java.srcDirs   = ['src/main/java']
-        groovy.srcDirs = ['src/main/groovy']
-    }
-    test {
-        java.srcDirs   = ['src/test/java']
-        groovy.srcDirs = ['src/test/groovy']
-    }
-}
+// sourceSets{
+//     main{
+//         java.srcDirs   = ['src/main/java']
+//         groovy.srcDirs = ['src/main/groovy']
+//     }
+//     test {
+//         java.srcDirs   = ['src/test/java']
+//         groovy.srcDirs = ['src/test/groovy']
+//     }
+// }
 
 test{
 	useJUnitPlatform()

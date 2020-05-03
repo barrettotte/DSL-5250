@@ -6,9 +6,9 @@ import com.sun.jna.Native
 
 interface Ehlapi32 extends Library{
     
-    Ehlapi32 INSTANCE = (Ehlapi32) Native.loadLibrary('EHLAPI32', Ehlapi32.class);
+    Ehlapi32 INSTANCE = (Ehlapi32) Native.loadLibrary('ehlapi32', Ehlapi32.class);
 
-    int wd_ConnectPS(int hInstance, String shortName);
-    int wd_SendKey(int hInstance, String keyData);
+    int WD_ConnectPS(int hInstance, String shortName);
+    int WD_SendKey(int hInstance, String keyData);
     
 }
