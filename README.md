@@ -25,4 +25,4 @@ See the approaches I took in [docs/approaches.md](docs/approaches.md)
 * [Groovy DSL Builders](https://medium.com/@musketyr/groovy-dsl-builders-1-the-concept-2d5a97fa0a51)
 * [IBM Emulator Programming](https://www.ibm.com/support/knowledgecenter/SSEQ5Y_5.9.0/com.ibm.pcomm.doc/books/html/emulator_programming08.htm)
 * [IBM Introduction to Emulator APIs](https://www.ibm.com/support/knowledgecenter/SSEQ5Y_6.0.0/com.ibm.pcomm.doc/books/html/emulator_programming06.htm)
-
+* [JNA API Documentation](https://java-native-access.github.io/jna/4.2.1/overview-summary.html)
