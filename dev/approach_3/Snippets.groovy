@@ -49,3 +49,11 @@ guard(User32Dll.INSTANCE.AllowSetForegroundWindow(p) != 0, 'Error AllowSetForegr
 // throws error 0 - access is denied
 
 
+
+println "${System.getProperty('os.arch')} - ${System.getProperty('os.name')}"
+println "Java - ${System.getProperty('java.version')} @ ${System.getProperty('java.home')}"
+        
+int process = Kernel32.INSTANCE.GetCurrentProcessId()
+println "process: ${process}\n"
+
+

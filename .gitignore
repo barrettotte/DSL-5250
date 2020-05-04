@@ -34,3 +34,4 @@ bin
 .vscode/
 .wakatime-project
 
+config.json

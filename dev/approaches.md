@@ -41,7 +41,6 @@ Somehow scrape page data, will need it for waiting and possible unit testing?
 * [winuser.h](https://docs.microsoft.com/en-us/windows/win32/api/winuser/)
 * [Keyboard Input Win32 and C++](https://docs.microsoft.com/en-us/windows/win32/learnwin32/keyboard-input)
 * [win32 Virtual Keycodes](https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes)
-* [ScanCode.java](https://stackoverflow.com/questions/46410760/is-my-jna-sendinput-call-flawed)
 * [JNA User32 Interface](https://java-native-access.github.io/jna/4.2.0/com/sun/jna/platform/win32/User32.html)
 
 
