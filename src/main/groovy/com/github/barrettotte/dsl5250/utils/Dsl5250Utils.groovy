@@ -14,7 +14,7 @@ class Dsl5250Utils{
     }
 
     static Closure closureFromFile(final File f){
-		return new GroovyShell().evaluate('return ' + f.text)
-	}
+        return new GroovyShell().evaluate('return ' + f.text)
+    }
 
 }

@@ -18,6 +18,8 @@ See the approaches I took in [docs/approaches.md](docs/approaches.md)
 
 ## TODO
 * ```log.info``` instead of ```println``` - SLF4J? http://docs.groovy-lang.org/2.4.2/html/gapi/groovy/util/logging/Slf4j.html
+* Reorganize Main.groovy into utilities and whatnot
+* Basic Java swing application for entering credentials and whatnot? 
 
 
 ## References

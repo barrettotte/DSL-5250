@@ -3,6 +3,9 @@ package com.github.barrettotte.dsl5250
 import com.github.barrettotte.dsl5250.Dsl5250
 import com.github.barrettotte.dsl5250.exception.SystemException
 
+import java.awt.Toolkit
+import java.awt.datatransfer.DataFlavor
+
 import com.sun.jna.Library
 import com.sun.jna.Native
 import com.sun.jna.Platform
@@ -24,6 +27,7 @@ import com.sun.jna.platform.win32.WinUser
 import com.sun.jna.platform.win32.WinUser.INPUT
 
 import groovy.json.JsonSlurper
+
 
 public class Main{
 
@@ -73,34 +77,34 @@ public class Main{
     }
 
     public static boolean isKeyDown(final int key){
-		return (0x1 & (User32.INSTANCE.GetAsyncKeyState(key) >> (Short.SIZE - 1))) != 0 // check most-sig bit for non-zero
-	}
+        return (0x1 & (User32.INSTANCE.GetAsyncKeyState(key) >> (Short.SIZE - 1))) != 0 // check most-sig bit for non-zero
+    }
 
     static void sendKeyDown(final INPUT input, final int c){
-		input.input.ki.wVk = new WORD(c)
+        input.input.ki.wVk = new WORD(c)
         input.input.ki.dwFlags = new DWORD(KEYEVENTF_KEYDOWN)
-		guard(User32.INSTANCE.SendInput(new DWORD(1), (INPUT[]) input.toArray(1), input.size()) == 0, 'send key down failed')
+        guard(User32.INSTANCE.SendInput(new DWORD(1), (INPUT[]) input.toArray(1), input.size()) == 0, 'send key down failed')
     }
 
     static void sendKeyUp(final INPUT input, final int c){
-		input.input.ki.wVk = new WORD(c)
-		input.input.ki.dwFlags = new DWORD(KEYEVENTF_KEYUP)
-		guard(User32.INSTANCE.SendInput(new DWORD(1), (INPUT[]) input.toArray(1), input.size()) == 0, 'send key up failed')
+        input.input.ki.wVk = new WORD(c)
+        input.input.ki.dwFlags = new DWORD(KEYEVENTF_KEYUP)
+        guard(User32.INSTANCE.SendInput(new DWORD(1), (INPUT[]) input.toArray(1), input.size()) == 0, 'send key up failed')
     }
 
     static void sendKey(final INPUT input, final int c){
-		sendKeyDown(input, c)
+        sendKeyDown(input, c)
         Thread.sleep(25)
         sendKeyUp(input, c)
     }
 
     static void simulateInput(){
         INPUT input = new INPUT()
-		input.type = new DWORD(INPUT.INPUT_KEYBOARD)
-		input.input.setType('ki')
-		input.input.ki.wScan = new WORD(0)
-		input.input.ki.time = new DWORD(0)
-		input.input.ki.dwExtraInfo = new ULONG_PTR(0)
+        input.type = new DWORD(INPUT.INPUT_KEYBOARD)
+        input.input.setType('ki')
+        input.input.ki.wScan = new WORD(0)
+        input.input.ki.time = new DWORD(0)
+        input.input.ki.dwExtraInfo = new ULONG_PTR(0)
 
         // TODO: move this elsewhere - probably environment struct
         final jsonSlurper = new JsonSlurper()
@@ -149,7 +153,11 @@ public class Main{
             guard(User32.INSTANCE.ShowWindow(win5250, User32.SW_SHOWMAXIMIZED) == 0, 'Error showing window (maximize)')
             guard(User32.INSTANCE.UpdateWindow(win5250) == 0, 'Error updating window')
 
-            simulateInput()
+            //simulateInput()
+            
+            // TODO: clipboard to text file
+            println (Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor) as String)
+
             guard(User32.INSTANCE.CloseWindow(win5250) == 0, 'Error closing window')
 
         } catch(final Exception e){

@@ -43,6 +43,42 @@ Somehow scrape page data, will need it for waiting and possible unit testing?
 * [win32 Virtual Keycodes](https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes)
 * [JNA User32 Interface](https://java-native-access.github.io/jna/4.2.0/com/sun/jna/platform/win32/User32.html)
 
+Alright cool, now we've got window manipulation and keypresses.
+Now the next puzzle, how do we know where the cursor is on screen...
+**Side note:** Look into using [java.awt.Robot](https://docs.oracle.com/javase/7/docs/api/java/awt/Robot.html) for keypresses instead (might be easier).
+
+
+Emulator coordinates are always in view... just not accessible
+* Not available in a CTRL+A and CTRL+C
+* Not consistent, depends on resolution :/
+
+
+**Brainstorm:**
+1. Approach A
+  * open window fixed resolution
+  * **java.awt.Robot.createScreenCapture()** for bottom right corner of screen (10-20% of resolution) 
+  * use OCR or other image processing to get coordinates
+  * Could be used for an additional test option - screenshots with each step
+  * EXPENSIVE - I'm assuming...maybe there are lightweight solutions.
+    * could be cheap -> dealing with 1-bit color (black or white)
+2. Approach B
+  * open window fixed resolution
+  * use **Color java.awt.Robot.getPixelColor(int x, int y)**
+  * Grab a block of pixels, parse coordinates (only dealing with 6 characters - numbers and a slash...doable)
+  * "Might" be lighter than loading Image buffer and loading it into an image processing library
+  * Fonts destroy this solution completely...enforce font? (yikes)
+
+
+https://github.com/java-native-access/jna/blob/master/contrib/platform/test/com/sun/jna/platform/win32/User32Test.java#L208
+https://github.com/java-native-access/jna/blob/master/contrib/platform/test/com/sun/jna/platform/win32/User32Test.java#L388
+
+Recording screen per step with **java.awt.Toolkit** and keypresses
+* open window in forced resolution
+* simulate ```CTRL+A``` and ```CTRL+C```
+* ``` println (Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor) as String)```
+
+
+
 
 ## Research
 * Host on Demand https://www.ibm.com/us-en/marketplace/host-on-demand

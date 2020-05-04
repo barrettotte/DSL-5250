@@ -1,7 +1,8 @@
-// snippets from screwing around with JNA
+// discarded snippets from screwing around with JNA
+// Maybe I'll need one of these some day...who knows
 
 
-
+// loop over windows
 for(final DesktopWindow dw : WindowUtils.getAllWindows(true)){
     final String title = dw.getTitle().trim()
     final String fpath = dw.getFilePath().trim()
@@ -14,6 +15,7 @@ for(final DesktopWindow dw : WindowUtils.getAllWindows(true)){
 
 
 
+// Find window in a different way (with a callback)
 final User32Dll user32 = User32Dll.INSTANCE
 boolean notFound = user32.EnumWindows(new WinUser.WNDENUMPROC(){
     @Override
@@ -33,6 +35,8 @@ boolean notFound = user32.EnumWindows(new WinUser.WNDENUMPROC(){
 
 
 
+// Trying to figure out how to set foreground window
+// Snippet usesful for showing how to setup User32.dll interface
 public interface User32Dll extends StdCallLibrary {
     final User32Dll INSTANCE = Native.loadLibrary('user32', User32Dll.class) as User32Dll
 
@@ -50,10 +54,11 @@ guard(User32Dll.INSTANCE.AllowSetForegroundWindow(p) != 0, 'Error AllowSetForegr
 
 
 
+// Useful debug info
 println "${System.getProperty('os.arch')} - ${System.getProperty('os.name')}"
-println "Java - ${System.getProperty('java.version')} @ ${System.getProperty('java.home')}"
-        
+println "Java - ${System.getProperty('java.version')} @ ${System.getProperty('java.home')}"     
 int process = Kernel32.INSTANCE.GetCurrentProcessId()
 println "process: ${process}\n"
+
 
 
