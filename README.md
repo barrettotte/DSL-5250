@@ -1,11 +1,26 @@
 # DSL-5250
 
-A DSL for interacting with **IBM Access Client Solutions 5250 Emulator** for **Windows**.
+A dummy's approach to making a DSL to automate a 5250 emulator.
 
 
 ## Purpose
 This project was used to reinforce my limited knowledge of Groovy and learn how to make a Domain Specific Language (DSL).
-Additionally, this could also be used in a basic application to automate a repetitive task in a 5250 emulator session.
+Additionally, 5250 emulator automation seemed like a fascinating topic to screw around with.
+
+My coworker ([Ryan Eberly](https://github.com/ryaneberly)) sparked the motivation for this project, he has an awesome
+testing framework built around TN5250J in [Terminal Driver](https://github.com/terminaldriver/terminaldriver).
+
+I think I could have taken this project a lot further, but for now I am satisfied with it; Time to move onto the next "shiny".
+
+
+## DSL Features
+* Get and set cursor position
+* Get and set screen contents
+* Wait for screen content to appear
+* Press command keys F1-F24
+* Press ENTER, TAB, ESCAPE
+* Record screen text to text file
+* Capture screenshot
 
 
 ## Syntax
@@ -13,7 +28,7 @@ TODO:
 
 
 ## Approach
-See the approaches I took in [docs/approaches.md](docs/approaches.md)
+I took a few other approaches before the current implementation, skim through them in [docs/approaches.md](docs/approaches.md)
 
 
 ## TODO
