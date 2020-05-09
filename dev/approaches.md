@@ -104,6 +104,7 @@ In this repository he clearly demonstrates being able to programatically fetch 5
 AND maintain knowledge of current cursor position.
 
 
+
 ## Other Possible Approaches
 * Web enabled 5250 terminal and use Selenium
   * web navigator > 5250 emulator

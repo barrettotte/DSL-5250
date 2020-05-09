@@ -9,7 +9,7 @@ plugins{
 
 ext{
   tn5250Version = '0.7.6'
-  tn5250Jar = "lib/tn5250j-${tn5250Version}/tn5250j.jar"
+  tn5250Jar = "libs/tn5250j-${tn5250Version}/tn5250j.jar"
 }
 
 group = 'com.barrettotte'
@@ -22,6 +22,9 @@ repositories{
   maven{
     url "https://plugins.gradle.org/m2/"
   }
+  // flatDir {
+  //   dirs 'libs'
+  // }
 }
 
 dependencies{
@@ -30,7 +33,13 @@ dependencies{
   if(!file(tn5250Jar).exists()){
     throw new GradleException('TN5250J jar is missing !\nrun \'getTN5250J.sh\'')
   }
-  implementation fileTree(dir: "lib/tn5250j-${tn5250Version}", include: '*.jar')
+
+  // Does not work...
+  //implementation fileTree(dir: "libs", include: '*.jar')
+  //implementation files('libs/tn5250j.jar')
+  //compile fileTree(dir: 'libs', include: 'tn5250j.jar')
+  //shadow files('libs/tn5250j.jar')
+  compile files(fileTree(dir: 'libs', includes: ['*.jar']))
 
   implementation 'net.java.dev.jna:jna:5.5.0'
   implementation 'net.java.dev.jna:jna-platform:5.5.0'
@@ -67,6 +76,7 @@ codenarc{
 
 
 // TODO: doesn't work correctly - missing bytes somewhere along the way...
+/*
 tasks.register('getTN5250J'){
   new File('lib').mkdirs()
   def tn5250 = new File("lib/tn5250j-${tn5250Version}-full-bin.zip")
@@ -95,3 +105,4 @@ tasks.register('getTN5250J'){
   delete "lib/tn5250j-${tn5250Version}-full-bin.zip"
   println 'Successfully downloaded TN5250J !'
 }
+*/
