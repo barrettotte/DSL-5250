@@ -35,3 +35,4 @@ bin
 .wakatime-project
 
 config.json
+lib

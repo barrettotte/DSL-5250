@@ -23,6 +23,10 @@ I think I could have taken this project a lot further, but for now I am satisfie
 * Capture screenshot
 
 
+## Setup
+* Download TN5250J jar and place in **lib/** - ```./tn5250.sh```
+
+
 ## Syntax
 TODO:
 
