@@ -24,7 +24,7 @@ I think I could have taken this project a lot further, but for now I am satisfie
 
 
 ## Setup
-* Download TN5250J jar and place in **lib/** - ```./tn5250.sh```
+* Download TN5250J jar and place in **lib/** - ```./getTN5250J.sh```
 
 
 ## Syntax

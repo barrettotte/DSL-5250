@@ -1,5 +1,5 @@
 #!/bin/bash
-# note: this could probably be a gradle step...
+# note: couldn't get gradle task working correctly...this'll work for now.
 
 version=0.7.6
 
