@@ -97,6 +97,7 @@ There are a ton of flaws with this approach and the ideas I brainstormed:
 As much as I really wanted to get this working, its time I abandon this approach and go for a better one.
 
 
+
 ## Approach 4 - Switch to TN5250J
 I really wanted to just use ACS 5250, but its just not doable with the approaches I've tried.
 My coworker made [TerminalDriver](https://github.com/terminaldriver/terminaldriver), based around TN5250J.

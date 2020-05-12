@@ -22,24 +22,11 @@ repositories{
   maven{
     url "https://plugins.gradle.org/m2/"
   }
-  // flatDir {
-  //   dirs 'libs'
-  // }
 }
 
 dependencies{
   implementation 'org.codehaus.groovy:groovy-all:3.0.3'
-  
-  if(!file(tn5250Jar).exists()){
-    throw new GradleException('TN5250J jar is missing !\nrun \'getTN5250J.sh\'')
-  }
-
-  // Does not work...
-  //implementation fileTree(dir: "libs", include: '*.jar')
-  //implementation files('libs/tn5250j.jar')
-  //compile fileTree(dir: 'libs', include: 'tn5250j.jar')
-  //shadow files('libs/tn5250j.jar')
-  //compile files(fileTree(dir: 'libs', includes: ['*.jar']))
+  implementation fileTree(dir: 'libs', include: '*.jar')
 
   implementation 'net.java.dev.jna:jna:5.5.0'
   implementation 'net.java.dev.jna:jna-platform:5.5.0'
@@ -73,36 +60,3 @@ codenarc{
   configFile = file('config/codenarc/codenarc.xml')
   reportFormat = 'html'
 }
-
-
-// TODO: doesn't work correctly - missing bytes somewhere along the way...
-/*
-tasks.register('getTN5250J'){
-  new File('lib').mkdirs()
-  def tn5250 = new File("lib/tn5250j-${tn5250Version}-full-bin.zip")
-  println "Downloading tn5250j-${tn5250Version}-full-bin.zip ..."
-
-  tn5250.withOutputStream{out ->
-    def zipUrl = 'https://github.com/tn5250j/tn5250j/releases/download' +
-                 "/${tn5250Version}/tn5250j-${tn5250Version}-full-bin.zip"
-    new URL(zipUrl).eachByte{b->
-      out.write(b)
-    }
-  }
-  def zip = new java.util.zip.ZipFile(tn5250)
-  println 'Unzipping...'
-  zip.entries().each{e->
-    if(!e.isDirectory()){
-      def f = new File('lib' + File.separator + e.name)
-      new File(f.parent).mkdirs()
-      def fos = new FileOutputStream(f)
-      def buf = new byte[e.size]
-      fos.write(buf, 0, zip.getInputStream(e).read(buf))
-      fos.close()
-    }
-  }
-  zip.close()
-  delete "lib/tn5250j-${tn5250Version}-full-bin.zip"
-  println 'Successfully downloaded TN5250J !'
-}
-*/

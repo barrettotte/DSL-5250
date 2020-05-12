@@ -35,5 +35,4 @@ bin
 .wakatime-project
 
 config.json
-lib
-libs
+libs/*.jar
