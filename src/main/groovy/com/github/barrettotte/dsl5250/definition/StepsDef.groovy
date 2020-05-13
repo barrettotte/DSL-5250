@@ -1,35 +1,48 @@
 package com.github.barrettotte.dsl5250.definition
 
+//import org.tn5250j.keyboard.KeyMnemonic
+
 import groovy.transform.CompileStatic
+
+import com.github.barrettotte.dsl5250.exception.StepException
 
 @CompileStatic
 class StepsDef{
 
     void position(final int x, final int y){
-        printStep "positioning cursor to ($x,$y)"
+        logStep "positioning cursor to ($x,$y)"
     }
 
     void send(final String s, final boolean isSensitive=false){
         if(s?.trim() == 0){
-            throw new Exception('Cannot send null string to emulator')
+            throw new StepException('Cannot send null string')
         }
-        printStep "typing '${(isSensitive) ? ('*' * 16) : s}'"
+        logStep "typing '${(isSensitive) ? ('*' * 16) : s}'"
     }
 
     void cmd(final int index){
-        printStep "pressing F$index"
+        if(index < 1 || index > 24){
+            throw new StepException("Invalid command key '${index}'.")
+        }
+        logStep "command $index"
+        // sendkeys "[pf${index}]"
+    }
+
+    void key(final String key){
+        //final KeyMnemonic km = key.toUpperCase()
+        logStep "pressing "
     }
 
     void waitms(final int ms){
         try{
-            printStep "waiting ${ms} ms..."
+            logStep "waiting ${ms} ms..."
             Thread.sleep(ms)
         } catch(final InterruptedException ex){
-            Thread.currentThread().interrupt()
+            //Thread.currentThread().interrupt()
         }
     }
 
-    void printStep(final String s){
+    void logStep(final String s){
         println "    - ${s}"
     }
 

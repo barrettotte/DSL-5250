@@ -4,7 +4,6 @@ import java.nio.file.Paths
 
 class Dsl5250Utils{
 
-
     static Closure closureFromFile(final String fileName){
         closureFromFile(new File(fileName))
     }

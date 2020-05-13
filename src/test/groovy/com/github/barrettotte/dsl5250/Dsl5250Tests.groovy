@@ -12,17 +12,17 @@ class Dsl5250Tests{
     void test_eval_manual(){
         dsl.eval{
             environment{
-                SYSTEM = 'PUB400.COM'
-                USERNAME = 'OTTEB'
-                PASSWORD = 'PASSWORD'
+                host = 'PUB400.COM'
+                user = 'OTTEB'
+                password = 'PASSWORD'
             }
             stages{
                 stage('LOGIN'){
                     steps{env->
                         position 6,53
-                        send "${env.USERNAME}"
+                        send "${env.user}"
                         position 7,53
-                        send "${env.PASSWORD}",true
+                        send "${env.password}",true
                         waitms 1000
                     }
                 }

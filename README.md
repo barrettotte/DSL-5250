@@ -1,6 +1,6 @@
 # DSL-5250
 
-A dummy's approach to making a DSL to automate a 5250 emulator using Groovy and TN5250J.
+A dummy's approach to making a simple DSL to automate a 5250 emulator using Groovy and TN5250J.
 
 
 ## Purpose
@@ -30,14 +30,17 @@ TODO:
 
 
 ## Approach
-I took a few other approaches before the current implementation, skim through them in [dev/approaches](dev/approaches)
+I took a few other approaches before the current implementation, skim through them in [dev/approaches](dev/approaches). Here is the outline:
+1. JNA and EHLAPI32.dll - **failed**
+2. JRuby and EHLAPI32.dll - **failed**
+3. JNA and Win32 Programming - **barely worked...abandoned**
+4. TN5250J - **current**
 
 
 ## Enhancements
 * Set/get field by name
 * Smarter field traversing
 * HOD macro generation
-* 
 
 
 ## References

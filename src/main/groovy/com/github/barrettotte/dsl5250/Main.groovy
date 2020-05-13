@@ -1,7 +1,7 @@
 package com.github.barrettotte.dsl5250
 
 import com.github.barrettotte.dsl5250.Dsl5250
-import com.github.barrettotte.dsl5250.exception.SystemException
+import com.github.barrettotte.dsl5250.model.Environment
 
 import java.awt.Toolkit
 import java.awt.datatransfer.DataFlavor
@@ -13,62 +13,60 @@ import org.tn5250j.framework.common.SessionManager
 import org.tn5250j.Session5250
 import org.tn5250j.TN5250jConstants
 
-
 public class Main{
+
+    Session5250 session
+
+    static void inputString(final Session5250 session, final String s){
+        print 'typing \''
+        for(int i = 0; i < s.length(); i++){
+            char c = s[i]
+            print c
+            session.getScreen().simulateKeyStroke(c)
+        }
+        print '\'\n'
+    }
+
+    static Session5250 getSession(final Environment env){
+        final Properties props = new Properties()
+        props.with{
+            put 'SESSION_HOST', env.host
+            put 'SESSION_HOST_PORT', env.telnet
+            put 'SESSION_CODE_PAGE', env.codePage
+        }
+        final Session5250 session = SessionManager.instance().openSession(props, '', '')
+        session.connect()
+
+        for(int i = 1; i < 200 && !session.isConnected(); i++){
+			Thread.sleep(100)
+		}
+        Thread.sleep(500)
+        return session
+    }
 
 
     static void main(String[] args){
 
-        final String host = 'DEV400'
-        final String port = 23
-        final String codePage = '37'
+        final JsonSlurper slurper = new JsonSlurper()
+        final config = slurper.parse(new File(this.getClass().getResource('/config.json').toURI()))
 
-        final Properties sessionProperties = new Properties()
-        sessionProperties.with{
-            put 'SESSION_HOST', host
-            put 'SESSION_HOST_PORT', port
-            put 'SESSION_CODE_PAGE', codePage
+        final Environment env = new Environment()
+        env.with{
+            host = config['host']
+            user = config['user']
+            password = config['password']
         }
+        final Session5250 session = getSession(env)
 
-        final Session5250 session = SessionManager.instance().openSession(sessionProperties, '', '')
-        session.connect()
+        println "current pos:  ${session.getScreen().getCurrentPos()}"
+        println "current xy:   (${session.getScreen().getCurrentRow()},${session.getScreen().getCurrentCol()})"
+        println "screen size:  ${session.getScreen().getColumns()}x${session.getScreen().getRows()}"
 
-        for(int i = 1; i < 200 && !session.isConnected(); i++){
-			Thread.sleep(100);
-		}
-        Thread.sleep(500);
+        println "Moving cursor to (${6},${53}) ..."
+        session.getScreen().setCursor(6, 53)
+
+        inputString(session, env.user)
         
-        //session.getScreen().dumpScreen()
-        //println session.getScreen().getCharacters() as String
-        println "current row: ${session.getScreen().getCurrentRow()}"
-        println "current col: ${session.getScreen().getCurrentCol()}"
-        println "rows: ${session.getScreen().getRows()}"
-        println "cols: ${session.getScreen().getCols()}"
-
-        // session.getScreen().setCursor(int row, int col) // offset 1,1
-        
-        // Session5250.java
-        //   int getCurrentRow()
-        //   int getCurrentCol()
-        //   int getCurrentPos()
-        //   int getRow(int pos)
-        //   int getCol(int pos)
-        //   int getRows()
-        //   int getCols()
-        //   ScreenOIA getOIA()
-        //   ScreenPlanes getPlanes()
-        //   boolean simulateMnemonic(int mnem) // get mnemonic constants from TN5250JConstants.java
-        //   boolean simulateKeyStroke(char c)
-        //   boolean isStatusErrorCode()
-        //   int getErrorLine()
-
-
-        // SessionOIA.java
-        // OIA level codes as static ints
-        // InputInhibited codes as static ints
-        // public boolean isKeyboardLocked()
-
-
         session.disconnect()
     }
 

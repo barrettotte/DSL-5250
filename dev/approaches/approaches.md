@@ -105,6 +105,35 @@ In this repository he clearly demonstrates being able to programatically fetch 5
 AND maintain knowledge of current cursor position.
 
 
+```java
+    // TN5250J methods of interest
+    
+    // Session5250.java
+        int getCurrentRow()
+        int getCurrentCol()
+        int getCurrentPos()
+        int getRow(int pos)
+        int getCol(int pos)
+        int getRows()
+        int getColumns()
+        ScreenOIA getOIA()
+        ScreenPlanes getPlanes()
+        boolean simulateMnemonic(int mnem) // get mnemonic constants from TN5250JConstants.java
+        boolean simulateKeyStroke(char c)
+        boolean isStatusErrorCode()
+        int getErrorLine()
+
+        session.getScreen().dumpScreen()
+        println session.getScreen().getCharacters() as String
+
+
+    // SessionOIA.java
+        // OIA level codes as static ints
+        // InputInhibited codes as static ints
+        public boolean isKeyboardLocked()
+```
+
+
 
 ## Other Possible Approaches
 * Web enabled 5250 terminal and use Selenium
@@ -112,8 +141,7 @@ AND maintain knowledge of current cursor position.
   * TN5250j
 * DSL generates HOD macros - https://www.ibm.com/support/knowledgecenter/SSS9FA_11.0.0/com.ibm.hod.doc/doc/macro/macro.html?cp=SSS9FA_11.0.0/7
 * DSL generates AutoHotKey scripts
-* Recompiling 32-bit dll to 64-bit
-  * No clue where I'd start...probably not feasable
+* Recompiling 32-bit dll to 64-bit -> No clue where I'd start...probably not feasable
 * VBA?
   * Tons and tons of examples of doing it on earlier 5250 emulators 
   * I dont think ACS supports it - https://www.tetcommunity.com/blogs/building-reports-in-excel-using-ibm-pcomm-automation-api
@@ -132,7 +160,7 @@ AND maintain knowledge of current cursor position.
 
 
 
-
+## Misc Junk
 
 Recording screen per step with **java.awt.Toolkit** and keypresses
 * open window in forced resolution
