@@ -3,6 +3,7 @@ import java.util.zip.ZipFile
 plugins{
   id 'groovy'
   id 'codenarc'
+  id 'eclipse'
   id 'application'
   id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
@@ -42,7 +43,7 @@ test{
     events 'PASSED', 'FAILED', 'SKIPPED'
     showStandardStreams = true
   }
-  afterSuite{ desc, result ->
+  afterSuite{desc, result ->
     if(!desc.parent){
       println "\nTest result: ${result.resultType}"
       println "Test summary: " +

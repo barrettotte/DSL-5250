@@ -8,24 +8,29 @@ import groovy.transform.CompileStatic
 import com.github.barrettotte.dsl5250.exception.EnvironmentException
 import com.github.barrettotte.dsl5250.model.Environment
 import com.github.barrettotte.dsl5250.model.Stage
+import com.github.barrettotte.dsl5250.utils.Dsl5250Utils
+
+import org.tn5250j.Session5250
+import org.tn5250j.framework.common.SessionManager
+import org.tn5250j.Session5250
+import org.tn5250j.TN5250jConstants
 
 @CompileStatic
 class AutomationDef{
 
-    protected static final Environment env = new Environment()
+    static Environment env
+    static Session5250 session
 
     void environment(@DelegatesTo(value=Environment, strategy=DELEGATE_FIRST) final Closure closure){
+        env = new Environment()
         env.with(closure)
         if(!env.host || !env.user){
             throw new EnvironmentException('Invalid environment - must contain host and user')
         }
         if(!env.password){
-            def console = System.console()
-            if(console == null){
-                throw new EnvironmentException('Could not initialize console instance')
-            }
-            env.password = console.readPassword("${env.host}@${env.user}'s password:")
+            env.password = Dsl5250Utils.getMaskedInput("${env.host}@${env.user}'s password:")
         }
+        session = connect(env)
     }
 
     void stages(@DelegatesTo(value=StagesDef, strategy=DELEGATE_ONLY) final Closure closure){
@@ -35,9 +40,10 @@ class AutomationDef{
         closure.resolveStrategy = DELEGATE_ONLY
         closure.call()
 
-        dsl.stages.each{stage->
+        dsl.stages?.each{stage->
             runStage(stage)
         }
+        session?.disconnect()
     }
 
     void runStage(final Stage stage){
@@ -47,6 +53,24 @@ class AutomationDef{
         stage.closure.delegate = dsl
         stage.closure.resolveStrategy = DELEGATE_ONLY
         stage.closure.call()
+    }
+
+    // create 5250 session and establish connection
+    private Session5250 connect(final Environment env){
+        final Properties props = new Properties()
+        props.with{
+            put 'SESSION_HOST', env.host
+            put 'SESSION_HOST_PORT', env.telnet
+            put 'SESSION_CODE_PAGE', env.codePage
+        }
+        final Session5250 sess = SessionManager.instance().openSession(props, '', '')
+        sess.connect()
+
+        for(int i = 1; i < 200 && !sess.isConnected(); i++){
+			Thread.sleep(100)
+		}
+        Thread.sleep(500)
+        return sess
     }
 
 }

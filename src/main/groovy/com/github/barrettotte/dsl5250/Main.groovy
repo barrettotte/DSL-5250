@@ -15,59 +15,62 @@ import org.tn5250j.TN5250jConstants
 
 public class Main{
 
-    Session5250 session
+    // Session5250 session
 
-    static void inputString(final Session5250 session, final String s){
-        print 'typing \''
-        for(int i = 0; i < s.length(); i++){
-            char c = s[i]
-            print c
-            session.getScreen().simulateKeyStroke(c)
-        }
-        print '\'\n'
-    }
-
-    static Session5250 getSession(final Environment env){
-        final Properties props = new Properties()
-        props.with{
-            put 'SESSION_HOST', env.host
-            put 'SESSION_HOST_PORT', env.telnet
-            put 'SESSION_CODE_PAGE', env.codePage
-        }
-        final Session5250 session = SessionManager.instance().openSession(props, '', '')
-        session.connect()
-
-        for(int i = 1; i < 200 && !session.isConnected(); i++){
-			Thread.sleep(100)
-		}
-        Thread.sleep(500)
-        return session
-    }
-
+    // static void inputString(final Session5250 session, final String s){
+    //     print 'typing \''
+    //     for(int i = 0; i < s.length(); i++){
+    //         char c = s[i]
+    //         print c
+    //         session.getScreen().simulateKeyStroke(c)
+    //     }
+    //     print '\'\n'
+    // }
 
     static void main(String[] args){
-
         final JsonSlurper slurper = new JsonSlurper()
         final config = slurper.parse(new File(this.getClass().getResource('/config.json').toURI()))
+        final Dsl5250 dsl = new Dsl5250()
 
-        final Environment env = new Environment()
-        env.with{
-            host = config['host']
-            user = config['user']
-            password = config['password']
+        dsl.eval{
+            environment{
+                host = 'PUB400.COM'
+                user = 'OTTEB'
+            }
+            stages{
+                stage('LOGIN'){
+                    steps{env->
+                        position 6,53
+                        send "${env.user}"
+                        position 7,53
+                        send "${env.password}",true
+                        waitms 1000
+                    }
+                }
+                stage('TEST'){
+                    steps{
+                        position 20,7
+                        send 'DSPLIBL'
+                        cmd 12
+                    }
+                }
+                stage('LOGOFF'){
+                    steps{
+                        position 20,7
+                        send 'SIGNOFF'
+                    }
+                }
+            }
         }
-        final Session5250 session = getSession(env)
-
-        println "current pos:  ${session.getScreen().getCurrentPos()}"
-        println "current xy:   (${session.getScreen().getCurrentRow()},${session.getScreen().getCurrentCol()})"
-        println "screen size:  ${session.getScreen().getColumns()}x${session.getScreen().getRows()}"
-
-        println "Moving cursor to (${6},${53}) ..."
-        session.getScreen().setCursor(6, 53)
-
-        inputString(session, env.user)
         
-        session.disconnect()
+        // println "current pos:  ${session.getScreen().getCurrentPos()}"
+        // println "current xy:   (${session.getScreen().getCurrentRow()},${session.getScreen().getCurrentCol()})"
+        // println "screen size:  ${session.getScreen().getColumns()}x${session.getScreen().getRows()}"
+
+        // println "Moving cursor to (${6},${53}) ..."
+        // session.getScreen().setCursor(6, 53)
+
+        // inputString(session, env.user)
     }
 
 }
