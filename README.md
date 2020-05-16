@@ -1,11 +1,13 @@
 # DSL-5250
 
-A dummy's approach to making a simple DSL to automate a 5250 emulator using Groovy and TN5250J.
+A dummy's approach to making a simple DSL for headless interaction with a 5250 emulator.
 
 
 ## Purpose
 This project was used to reinforce my limited knowledge of Groovy and learn how to make a Domain Specific Language (DSL).
 Additionally, 5250 emulator automation seemed like a fascinating topic to screw around with.
+
+Possible applications could be basic automated tasks/testing and general screen scraping.
 
 My coworker ([Ryan Eberly](https://github.com/ryaneberly)) sparked the motivation for this project, he has an awesome 5250
 testing project built around TN5250J called [Terminal Driver](https://github.com/terminaldriver/terminaldriver).
@@ -15,10 +17,10 @@ I think I could have taken this project a lot further (this is a super shallow i
 
 ## DSL Features
 * Get and set cursor position
-* Enter string at current position
-* Press command keys F1-F24
-* Press control keys ENTER, TAB, ESCAPE, PAGEUP, PAGEDOWN, etc.
-* Record screen to text file for each 
+* Get and set screen contents at specified position or at cursor
+* Check screen position for string
+* Record screen contents to text file
+* Press command keys F1-F24 and other keys ENTER, TAB, ESCAPE, PAGEUP, PAGEDOWN, etc.
 
 
 ## Setup
@@ -37,10 +39,11 @@ I took a few other approaches before the current implementation, skim through th
 4. TN5250J - **current**
 
 
-## Enhancements
-* Set/get field by name
-* Smarter field traversing
+## Possible Enhancements
+* Set and get field by name
+* Smarter field traversing - next,prev,first,last
 * HOD macro generation
+* Image screenshots
 
 
 ## Commands

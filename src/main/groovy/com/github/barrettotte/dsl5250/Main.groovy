@@ -11,12 +11,14 @@ public class Main{
         final Dsl5250 dsl = new Dsl5250()
         final config = new JsonSlurper().parse(new File(this.getClass().getResource('/config.json').toURI()))
 
+        String firstLib
+
         dsl.eval{
             environment{
+                outputPath = 'out'
                 host = config['host']
                 user = config['user']
                 password = config['password']
-                outputPath = 'out'
             }
             stages{
                 stage('LOGIN'){
@@ -36,27 +38,39 @@ public class Main{
                         waitms 1000
                     }
                 }
-                stage('TEST'){
-                    steps{
-                        position 20,7
-                        send 'DSPLIBL'
-                        press Key.ENTER
-                        waitms 1000
-                        capture()
-                        cmd 12
-                        waitms 1000
-                    }
-                }
-                stage('LOGOFF'){
-                    steps{
-                        position 20,7
-                        send 'SIGNOFF'
-                        press Key.ENTER
-                        waitms 1000
-                        capture()
-                    }
-                }
+                // stage('DSPLIBL'){
+                //     steps{
+                //         position 20,7
+                //         send 'DSPLIBL'
+                //         press Key.ENTER
+                //         waitms 1000
+                //         capture()        
+                //         cmd 12
+                //         waitms 1000
+                //     }
+                // }
+                // stage('WRKMBRPDM'){
+                //     steps{
+                //         position 20,7
+                //         send 'WRKMBRPDM BOLIB/QRPGLESRC'
+                //         press Key.ENTER
+                //         waitms 1000
+                //         capture()
+                //         // while(!check('Bottom',19,73)) liblist << (subfile contents)
+                //     }
+                // }
+                // stage('LOGOFF'){
+                //     steps{
+                //         position 20,7
+                //         send 'SIGNOFF'
+                //         press Key.ENTER
+                //         waitms 1000
+                //         capture()
+                //     }
+                // }
             }
         }
+
+        //println 'first library -> ' + firstLib
     }
 }

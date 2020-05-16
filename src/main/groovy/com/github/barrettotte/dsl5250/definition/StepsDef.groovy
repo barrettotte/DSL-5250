@@ -8,8 +8,11 @@ import com.github.barrettotte.dsl5250.exception.StepException
 import com.github.barrettotte.dsl5250.model.Environment
 
 import groovy.transform.CompileStatic
+import groovy.util.logging.Log4j
+
 import org.codehaus.groovy.runtime.DateGroovyMethods
 
+@Log4j
 @CompileStatic
 class StepsDef{
 
@@ -61,6 +64,12 @@ class StepsDef{
     Integer width(){
         logStep 'Fetching screen width'
         return AutomationDef.screenWidth
+    }
+
+    // reposition cursor and input string
+    void send(final int row, final int col, final String s, final Boolean isSensitive=false){
+        position(row, col)
+        send(s, isSensitive)
     }
 
     // input integer
@@ -141,8 +150,8 @@ class StepsDef{
         }
     }
 
-    // wait for string at specified position row/col
-    void waitFor(final String s, final Integer row, final Integer col){
+    // wait until string appears at specified position row/col or timeout
+    void waitUntil(final String s, final Integer row, final Integer col){
         logStep "Waiting for '$s' to appear at position $row/$col"
         // TODO:
     }
@@ -150,12 +159,7 @@ class StepsDef{
     // check string exists at position row/col
     Boolean check(final String expected, final Integer row, final Integer col){
         logStep "Checking if '$expected' exists at position $row/$col to $row/${col + expected.length()}"
-        // TODO: edge checks
-        // 1=PLANE_TEXT (see org.tn5250j.framework.tn5250.ScreenPlanes)
-        //final String actual = AutomationDef.screen.getData(row, col, row, col + expected.length(), 1) as String
-
         final String actual = screenContents()[row-1].substring(col-1).take(expected.length())
-        println "$expected == $actual -> ${expected == actual}"
         return expected == actual
     }
 
@@ -183,7 +187,7 @@ class StepsDef{
     // log each step
     void logStep(final String s){
         AutomationDef.stepIndex++
-        println "    - $s" // TODO: log instead of println
+        log.info(s)
     }
 
     // wrapper to throw a StepException

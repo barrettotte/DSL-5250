@@ -9,8 +9,8 @@ class Environment{
     String user
     String password
     
-    String telnet = '23'
-    String codePage = '37'
-    String outputPath = '.'
-
+    Integer telnet = 23      // default telnet port
+    Integer codePage = 37    
+    Integer timeout = 2500   // ms
+    String outputPath = '.'  // output path for screen captures
 }
