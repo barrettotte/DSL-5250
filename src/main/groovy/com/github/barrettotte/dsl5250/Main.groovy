@@ -1,23 +1,11 @@
 package com.github.barrettotte.dsl5250
 
 import com.github.barrettotte.dsl5250.Dsl5250
-import com.github.barrettotte.dsl5250.model.Environment
+import com.github.barrettotte.dsl5250.constant.Key
 
 import groovy.json.JsonSlurper
 
 public class Main{
-
-    // Session5250 session
-
-    // static void inputString(final Session5250 session, final String s){
-    //     print 'typing \''
-    //     for(int i = 0; i < s.length(); i++){
-    //         char c = s[i]
-    //         print c
-    //         session.getScreen().simulateKeyStroke(c)
-    //     }
-    //     print '\'\n'
-    // }
 
     static void main(String[] args){ 
         final Dsl5250 dsl = new Dsl5250()
@@ -28,14 +16,23 @@ public class Main{
                 host = config['host']
                 user = config['user']
                 password = config['password']
+                outputPath = 'out'
             }
             stages{
                 stage('LOGIN'){
                     steps{env->
                         position 6,53
-                        send "${env.user}"
+                        send env.user
+                        capture()
                         position 7,53
-                        send "${env.password}",true
+                        send env.password,true  // true -> mask in log
+                        press Key.ENTER
+                        waitms 2500
+                        if(check('Display Program Messages',1,28) || check('Display Messages',1,33)){
+                            press Key.ENTER
+                            waitms 1000
+                        }
+                        capture()
                         waitms 1000
                     }
                 }
@@ -43,26 +40,23 @@ public class Main{
                     steps{
                         position 20,7
                         send 'DSPLIBL'
+                        press Key.ENTER
+                        waitms 1000
+                        capture()
                         cmd 12
+                        waitms 1000
                     }
                 }
                 stage('LOGOFF'){
                     steps{
                         position 20,7
                         send 'SIGNOFF'
+                        press Key.ENTER
+                        waitms 1000
+                        capture()
                     }
                 }
             }
         }
-        
-        // println "current pos:  ${session.getScreen().getCurrentPos()}"
-        // println "current xy:   (${session.getScreen().getCurrentRow()},${session.getScreen().getCurrentCol()})"
-        // println "screen size:  ${session.getScreen().getColumns()}x${session.getScreen().getRows()}"
-
-        // println "Moving cursor to (${6},${53}) ..."
-        // session.getScreen().setCursor(6, 53)
-
-        // inputString(session, env.user)
     }
-
 }

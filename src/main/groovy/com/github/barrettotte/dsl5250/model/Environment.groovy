@@ -11,5 +11,6 @@ class Environment{
     
     String telnet = '23'
     String codePage = '37'
+    String outputPath = '.'
 
 }

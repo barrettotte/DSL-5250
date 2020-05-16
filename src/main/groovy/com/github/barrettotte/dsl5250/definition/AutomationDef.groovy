@@ -11,15 +11,22 @@ import com.github.barrettotte.dsl5250.model.Stage
 import com.github.barrettotte.dsl5250.utils.Dsl5250Utils
 
 import org.tn5250j.Session5250
+import org.tn5250j.framework.tn5250.Screen5250
 import org.tn5250j.framework.common.SessionManager
-import org.tn5250j.Session5250
 import org.tn5250j.TN5250jConstants
 
 @CompileStatic
 class AutomationDef{
 
+    // properties available throughout DSL
     static Environment env
     static Session5250 session
+    static Screen5250 screen
+    static Integer screenWidth
+    static Integer screenHeight
+    static String stageName
+    static Integer stageIndex
+    static Integer stepIndex
 
     void environment(@DelegatesTo(value=Environment, strategy=DELEGATE_FIRST) final Closure closure){
         env = new Environment()
@@ -27,26 +34,47 @@ class AutomationDef{
         if(!env.host || !env.user || !env.password){
             throw new EnvironmentException('Invalid environment - must contain host, user, and password')
         }
-        session = connect(env)
     }
 
     void stages(@DelegatesTo(value=StagesDef, strategy=DELEGATE_ONLY) final Closure closure){
-        final StagesDef dsl = new StagesDef()
+        session = connect(env)
+        println 'Session connected' // TODO: log
 
+        screen = session.getScreen()
+        screenWidth = screen.getColumns()
+        screenHeight = screen.getRows()
+
+        final StagesDef dsl = new StagesDef()
         closure.delegate = dsl
         closure.resolveStrategy = DELEGATE_ONLY
         closure.call()
 
-        dsl.stages?.each{stage->
-            runStage(stage)
+        Boolean hadException = false
+        stageIndex = 1
+        try{
+            dsl.stages?.each{stage->
+                stageName = stage.name
+                stepIndex = 0
+                runStage(stage)
+                stageIndex++
+            }
+        } catch(final Exception ex){
+            hadException = true
+            println ex // TODO: log
+        } finally{
+            session?.disconnect()
+            println 'Session disconnected' // TODO: log
         }
-        session?.disconnect()
+
+        if(hadException){
+            throw new Exception("Encountered exception in stage '$stageName'; step $stepIndex")
+        }
     }
 
     void runStage(final Stage stage){
         final StageDef dsl = new StageDef()
 
-        println "==> Running '${stage.name}' stage..."
+        println "==> Running '${stage.name}' stage..." // TODO: log instead of println
         stage.closure.delegate = dsl
         stage.closure.resolveStrategy = DELEGATE_ONLY
         stage.closure.call()
@@ -60,14 +88,14 @@ class AutomationDef{
             put 'SESSION_HOST_PORT', env.telnet
             put 'SESSION_CODE_PAGE', env.codePage
         }
-        final Session5250 sess = SessionManager.instance().openSession(props, '', '')
-        sess.connect()
+        final Session5250 s = SessionManager.instance().openSession(props, '', '')
+        s.connect()
 
-        for(int i = 1; i < 200 && !sess.isConnected(); i++){
+        for(int i = 1; i < 200 && !s.isConnected(); i++){
 			Thread.sleep(100)
 		}
         Thread.sleep(500)
-        return sess
+        return s
     }
 
 }

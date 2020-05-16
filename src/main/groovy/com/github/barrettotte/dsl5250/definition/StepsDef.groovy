@@ -1,109 +1,205 @@
 package com.github.barrettotte.dsl5250.definition
 
-//import org.tn5250j.keyboard.KeyMnemonic
+import org.tn5250j.Session5250
+import org.tn5250j.framework.tn5250.Screen5250
+
+import com.github.barrettotte.dsl5250.constant.Key
+import com.github.barrettotte.dsl5250.exception.StepException
+import com.github.barrettotte.dsl5250.model.Environment
 
 import groovy.transform.CompileStatic
-
-import com.github.barrettotte.dsl5250.exception.StepException
+import org.codehaus.groovy.runtime.DateGroovyMethods
 
 @CompileStatic
 class StepsDef{
 
-    // get cursor position (x,y)
+    // get current row
+    Integer row(){
+        logStep 'Fetching current row'
+        return AutomationDef.screen.getCurrentRow()
+    }
+
+    // get current column
+    Integer col(){
+        logStep 'Fetching current column'
+        return AutomationDef.screen.getCurrentCol()
+    }
+
+    // get cursor position as (row,col)
     Map<String, Integer> position(){
-        return [x: 0, y: 0] // TODO:
+        logStep "Fetching cursor position"
+        return [
+            row: AutomationDef.screen.getCurrentRow(), 
+            col: AutomationDef.screen.getCurrentCol()
+        ]
     }
 
-    // set cursor position to x,y (1,1 offset)
-    void position(final int x, final int y){
-        logStep "positioning cursor to ($x,$y)"
+    // set current row
+    void row(final Integer row){
+        position(row, AutomationDef.screen.getCurrentCol())
     }
 
-    // get cursor x position
-    int postionX(){
-        return 0 // TODO:
+    // set current column
+    void col(final Integer col){
+        position(AutomationDef.screen.getCurrentRow(), col)
     }
 
-    // set cursor x position
-    void postionX(final int x){
-        // TODO:
+    // set cursor position to row,col (1,1 offset)
+    void position(final Integer row, final Integer col){
+        assertScreenBounds(row, col)
+        logStep "Positioning cursor to $row/$col"
+        AutomationDef.screen.setCursor(row, col)
     }
 
-    // get cursor y postion
-    int postionY(){
-        return 0 // TODO:
+    // get number of rows on screen
+    Integer height(){
+        logStep 'Fetching screen height'
+        return AutomationDef.screenHeight
     }
 
-    // set cursor y position
-    void postionY(final int y){
-        // TODO:
+    // get number of columns on screen
+    Integer width(){
+        logStep 'Fetching screen width'
+        return AutomationDef.screenWidth
     }
 
-    // Input a string. isSensitive masks string in logging (good for passwords)
-    void send(final String s, final boolean isSensitive=false){
+    // input integer
+    void send(final Integer i){
+        send "$i"
+    }
+
+    // input string. isSensitive masks string in logging (good for secrets)
+    void send(final String s, final Boolean isSensitive=false){
         if(s?.trim() == 0){
-            throw new StepException('Cannot send null string')
+            throwIt 'Cannot send null string'
         }
         logStep "typing '${(isSensitive) ? ('*' * 16) : s}'"
+        AutomationDef.screen.sendKeys(s)
     }
 
-    // Get list of strings: for(y to listLength by 1) -> extract(x, (y * 1), bufferLength)
-    List<String> extract(final int x, final int y, final int bufferLength, final int listLength){
+    // get list of strings - incrementing row by 1
+    List<String> extract(final Integer row, final Integer col, final Integer bufferLength, final Integer listLength){
+        extract(row, col, bufferLength, listLength, 1)
+    }
+
+    // get list of strings
+    List<String> extract(final Integer row, final Integer col, final Integer bufferLength, final Integer listLength, final Integer rowIncrement){
+        List<String> l = []
+        logStep "Extracting list of strings with length $bufferLength, from positions $row/$col to ${row + (listLength * rowIncrement)}/$col"
         return [] // TODO:
         // TODO: edge checks
     }
 
-    // Get list of strings: for(y to listLength by 1) -> extract(x, (y * yIncrement), bufferLength)
-    List<String> extract(final int x, final int y, final int bufferLength, final int listLength, final int yIncrement){
-        return [] // TODO:
-        // TODO: edge checks
+    // extract string from current (row,col) to (row,col+bufferLength)
+    String extract(final Integer bufferLength){
+        extract(AutomationDef.screen.getCurrentRow(),  AutomationDef.screen.getCurrentCol(), bufferLength)
     }
 
-    // Extract string from (x,y) to (bufferLength,y)
-    String extract(final int x, final int y, final int bufferLength){
-        return '' //TODO:
+    // extract string from (row,col) to (bufferLength,y)
+    String extract(final Integer row, final Integer col, final Integer bufferLength){
+        String s = ''
+        logStep "Extracting string of length $bufferLength from position $row/$col"
         // TODO: edge checks
+        return s
     }
 
-    // Extract string from current (x,y) to (bufferLength,y)
-    String extract(final int bufferLength){
-        return '' //TODO:
-        // TODO: edge checks
-    }
-
-    // Press F1-F24
-    void cmd(final int index){
-        if(index < 1 || index > 24){
-            throw new StepException("Invalid command key '${index}'.")
+    // perform command -> F1-F24
+    void cmd(final Integer i){
+        if(i < 1 || i > 24){
+            throwIt "Invalid command key '$i'."
         }
-        logStep "command $index"
-        // sendkeys "[pf${index}]"
+        logStep "Command $i (F$i)"
+        AutomationDef.screen.sendKeys("[pf$i]")
     }
 
     // press a key
-    void key(final String key){
-        //final KeyMnemonic km = key.toUpperCase()
-        logStep "pressing ${key}"
-        // TODO: valid key check
+    void press(final Key key){
+        logStep "Pressing $key key"
+        AutomationDef.screen.sendKeys(key.code)
+    }
+
+    // press a key - by string instead of enum
+    void press(final String s){
+        final String lookup = s.toLowerCase()
+        final List<String> codes = Key.values()*.code
+        if(!(lookup in codes)){
+            throwIt "Invalid key '$s'.\n  Valid: $codes"
+        }
+        press(s as Key)
     }
 
     // wait for milliseconds
-    void waitms(final int ms){
+    void waitms(final Integer ms){
         try{
             if(ms < 0){
-                throw new StepException("Invalid wait time. Cannot wait ${ms} ms.")
+                throwIt "Invalid wait time. Cannot wait $ms ms."
             }
-            logStep "waiting ${ms} ms..."
+            logStep "Waiting $ms ms..."
             Thread.sleep(ms)
         } catch(final InterruptedException ex){
-            //Thread.currentThread().interrupt()
+            // Thread.currentThread().interrupt()
         }
+    }
+
+    // wait for string at specified position row/col
+    void waitFor(final String s, final Integer row, final Integer col){
+        logStep "Waiting for '$s' to appear at position $row/$col"
+        // TODO:
+    }
+
+    // check string exists at position row/col
+    Boolean check(final String expected, final Integer row, final Integer col){
+        logStep "Checking if '$expected' exists at position $row/$col to $row/${col + expected.length()}"
+        // TODO: edge checks
+        // 1=PLANE_TEXT (see org.tn5250j.framework.tn5250.ScreenPlanes)
+        //final String actual = AutomationDef.screen.getData(row, col, row, col + expected.length(), 1) as String
+
+        final String actual = screenContents()[row-1].substring(col-1).take(expected.length())
+        println "$expected == $actual -> ${expected == actual}"
+        return expected == actual
+    }
+
+    // write screen contents to file, using default naming convention
+    void capture(){
+        final String today = DateGroovyMethods.format(new Date(), 'yyyyMMdd')
+        final String stage = AutomationDef.stageIndex.toString().padLeft(2,'0') + '_' + AutomationDef.stageName.replaceAll('\\s','-')
+        capture(AutomationDef.env.outputPath + File.separator + today + "_${stage}_step_${AutomationDef.stepIndex.toString().padLeft(3,'0')}.txt")
+    }
+
+    // write screen contents to file at file path
+    void capture(final String filePath){
+        final File f = new File(filePath)
+        f.getParentFile().mkdirs()
+        f.newWriter().withWriter{w->
+            w << screenContents().join('\n')
+        }
+    }
+
+    // get screen contents split into rows
+    List<String> screenContents(){
+        return (AutomationDef.screen.getScreenAsChars() as String).split("(?<=\\G.{${AutomationDef.screenWidth}})") as List<String>
     }
 
     // log each step
     void logStep(final String s){
-        println "    - ${s}"
-        println AutomationDef.env
+        AutomationDef.stepIndex++
+        println "    - $s" // TODO: log instead of println
+    }
+
+    // wrapper to throw a StepException
+    void throwIt(final String s){ 
+        throw new StepException("stage '${AutomationDef.stageName}'; step${AutomationDef.stepIndex} -> $s")
+    }
+
+    // throw exception if position (row,col) is out of bounds for current session's screen
+    void assertScreenBounds(final Integer row, final Integer col){
+        if(!row || !col){
+            throwIt "Cannot position to $row/$col. Position cannot contain null."
+        } else if(col < 1 || col > AutomationDef.screenWidth){
+            throwIt "Cannot position to $row/$col. Column position out of bounds [1-${AutomationDef.screenWidth}]."
+        } else if(row < 1 || row > AutomationDef.screenHeight){
+            throwIt "Cannot position to $row/$col. Row position out of bounds [1-${AutomationDef.screenHeight}]."
+        }
     }
 
 }
