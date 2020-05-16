@@ -24,11 +24,8 @@ class AutomationDef{
     void environment(@DelegatesTo(value=Environment, strategy=DELEGATE_FIRST) final Closure closure){
         env = new Environment()
         env.with(closure)
-        if(!env.host || !env.user){
-            throw new EnvironmentException('Invalid environment - must contain host and user')
-        }
-        if(!env.password){
-            env.password = Dsl5250Utils.getMaskedInput("${env.host}@${env.user}'s password:")
+        if(!env.host || !env.user || !env.password){
+            throw new EnvironmentException('Invalid environment - must contain host, user, and password')
         }
         session = connect(env)
     }

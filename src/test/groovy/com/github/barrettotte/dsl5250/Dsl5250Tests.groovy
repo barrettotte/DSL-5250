@@ -14,8 +14,8 @@ class Dsl5250Tests{
     void test_eval_manual(){
         dsl.eval{
             environment{
-                host = 'PUB400.COM'
-                user = 'OTTEB'
+                host = 'HOST'
+                user = 'USER'
                 password = 'PASSWORD'
             }
             stages{

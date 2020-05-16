@@ -3,15 +3,7 @@ package com.github.barrettotte.dsl5250
 import com.github.barrettotte.dsl5250.Dsl5250
 import com.github.barrettotte.dsl5250.model.Environment
 
-import java.awt.Toolkit
-import java.awt.datatransfer.DataFlavor
-
 import groovy.json.JsonSlurper
-
-import org.tn5250j.Session5250
-import org.tn5250j.framework.common.SessionManager
-import org.tn5250j.Session5250
-import org.tn5250j.TN5250jConstants
 
 public class Main{
 
@@ -27,15 +19,15 @@ public class Main{
     //     print '\'\n'
     // }
 
-    static void main(String[] args){
-        final JsonSlurper slurper = new JsonSlurper()
-        final config = slurper.parse(new File(this.getClass().getResource('/config.json').toURI()))
+    static void main(String[] args){ 
         final Dsl5250 dsl = new Dsl5250()
+        final config = new JsonSlurper().parse(new File(this.getClass().getResource('/config.json').toURI()))
 
         dsl.eval{
             environment{
-                host = 'PUB400.COM'
-                user = 'OTTEB'
+                host = config['host']
+                user = config['user']
+                password = config['password']
             }
             stages{
                 stage('LOGIN'){

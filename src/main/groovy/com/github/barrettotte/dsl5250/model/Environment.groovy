@@ -4,6 +4,7 @@ import groovy.transform.CompileStatic
 
 @CompileStatic
 class Environment{
+    
     String host
     String user
     String password

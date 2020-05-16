@@ -1,7 +1,7 @@
 {
   environment{
-    host = 'PUB400.COM'
-    user = 'OTTEB'
+    host = 'HOST'
+    user = 'USER'
     password = 'PASSWORD'
   }
   stages{

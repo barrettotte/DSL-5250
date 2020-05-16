@@ -4,7 +4,8 @@ plugins{
   id 'groovy'
   id 'codenarc'
   id 'eclipse'
-  id 'application'
+  id 'idea'
+  id 'application' // TODO: temp
   id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
@@ -13,10 +14,10 @@ ext{
   tn5250Jar = "libs/tn5250j-${tn5250Version}/tn5250j.jar"
 }
 
-group = 'com.barrettotte'
+group = 'com.github.barrettotte'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
-mainClassName = 'com.github.barrettotte.dsl5250.Main'
+mainClassName = 'com.github.barrettotte.dsl5250.Main' // TODO: temp
 
 repositories{
   mavenCentral()
@@ -33,6 +34,19 @@ dependencies{
   implementation 'net.java.dev.jna:jna-platform:5.5.0'
 
   testImplementation 'org.junit.jupiter:junit-jupiter:5.6.2'
+  testImplementation 'org.mockito:mockito-core:2.27.0'
+  testImplementation 'org.mockito:mockito-junit-jupiter:2.27.0'
+}
+
+sourceSets{
+  main{
+    java.srcDirs   = ['src/main/java']
+    groovy.srcDirs = ['src/main/groovy']
+  }
+  test{
+    java.srcDirs   = ['src/test/java']
+    groovy.srcDirs = ['src/test/groovy']
+  }
 }
 
 test{
