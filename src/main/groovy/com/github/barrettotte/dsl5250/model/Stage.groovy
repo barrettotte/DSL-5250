@@ -3,12 +3,12 @@ package com.github.barrettotte.dsl5250.model
 import groovy.transform.CompileStatic
 
 @CompileStatic
-class NamedClosure{
+class Stage{
 
     final String name
     final Closure closure
 
-    NamedClosure(final String name, final Closure closure){
+    Stage(final String name, final Closure closure){
         this.name = name
         this.closure = closure
     }

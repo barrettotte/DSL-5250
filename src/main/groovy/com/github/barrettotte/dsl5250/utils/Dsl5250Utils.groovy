@@ -21,7 +21,11 @@ class Dsl5250Utils{
         if(ms < 1){
             throw new Exception("Invalid wait time '$ms'ms")
         }
-        Thread.sleep(ms)
+        try{
+            Thread.sleep(ms)
+        } catch(final IllegalMonitorStateException e){
+            // just keep going
+        }
     }
 
 }

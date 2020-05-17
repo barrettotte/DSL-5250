@@ -8,7 +8,7 @@ import groovy.util.logging.Log4j
 
 import com.github.barrettotte.dsl5250.exception.EnvironmentException
 import com.github.barrettotte.dsl5250.model.Environment
-import com.github.barrettotte.dsl5250.model.NamedClosure
+import com.github.barrettotte.dsl5250.model.Stage
 import com.github.barrettotte.dsl5250.utils.Dsl5250Utils
 
 import org.tn5250j.Session5250
@@ -72,12 +72,12 @@ class AutomationDef{
             session?.disconnect()
             log.info('Session disconnected')
         }
-        if(!rethrow){
+        if(rethrow){
             throw rethrow
         }
     }
 
-    void runStage(final NamedClosure stage){
+    void runStage(final Stage stage){
         final StageDef dsl = new StageDef()
 
         log.info("==> Running '${stage.name}' stage...")

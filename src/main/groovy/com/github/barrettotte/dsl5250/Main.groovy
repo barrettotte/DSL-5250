@@ -10,7 +10,8 @@ public class Main{
     static void main(String[] args){ 
         final Dsl5250 dsl = new Dsl5250()
         final config = new JsonSlurper().parse(new File(this.getClass().getResource('/config.json').toURI()))
-        String firstLib
+        
+        final List<String> qrpgleMembers = []
 
         dsl.eval{
             environment{
@@ -26,15 +27,15 @@ public class Main{
                         send env.user
                         capture()
                         position 7,53
-                        send env.password,true  // true -> mask in log
+                        send env.password,true  // true -> masks text in log
                         press Key.ENTER
-                        wait 2500
+                        waitms 2500
                         if(check('Display Program Messages',1,28) || check('Display Messages',1,33)){
                             press Key.ENTER
-                            wait 1000
+                            waitms 1000
                         }
                         capture()
-                        wait 1000
+                        waitms 1000
                     }
                 }
                 stage('DSPLIBL'){
@@ -44,19 +45,26 @@ public class Main{
                         waitms 1000
                         capture()        
                         cmd 12
-                        wait 1000
+                        waitms 1000
                     }
                 }
-                stage('WRKMBRPDM'){
+                stage('EXTRACT'){
                     steps{
+                        def system = extract(2,72,10) // testing extract method  (row, col, length)
+                        println "system - $system"
                         position 20,7
                         send 'WRKMBRPDM BOLIB/QRPGLESRC'
                         press Key.ENTER
                         waitms 1000
-                        capture()
+
+                        while(!(check('You have reached the bottom of the list.',24,2))){
+                            capture()
+                            qrpgleMembers.addAll(extract(11,7,10,8).collect{i-> i.replaceAll('\\s','')}.findAll{i-> i.length() > 0})
+                            press Key.PG_DOWN
+                            waitms 1000
+                        }
                         cmd 3
-                        wait 1000
-                        // while(!check('Bottom',19,73)) liblist << (subfile contents)
+                        waitms 1000
                     }
                 }
                 stage('LOGOFF'){
@@ -64,13 +72,12 @@ public class Main{
                         position 20,7
                         send 'SIGNOFF'
                         press Key.ENTER
-                        wait 1000
+                        waitms 1000
                         capture()
                     }
                 }
             }
         }
-
-        //println 'first library -> ' + firstLib
+        println 'BOLIB/QRPGLESRC\n' + qrpgleMembers
     }
 }

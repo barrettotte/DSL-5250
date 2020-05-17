@@ -17,15 +17,6 @@ import org.codehaus.groovy.runtime.DateGroovyMethods
 @CompileStatic
 class StepsDef{
 
-    // TODO: move to utils ?
-    // processing before each step
-    void preStep(final String s){
-        AutomationDef.stepIndex++
-        log.info(s)
-    }
-    // preStep, postStep ?
-    // make a model like how Stage works ?
-
     // get current row
     Integer row(){
         preStep 'Fetching current row'
@@ -59,8 +50,8 @@ class StepsDef{
 
     // set cursor position to row,col (1,1 offset)
     void position(final Integer row, final Integer col){
-        assertScreenBounds(row, col)
         preStep "Positioning cursor to $row/$col"
+        assertScreenBounds(row, col)
         AutomationDef.screen.setCursor(row, col)
     }
 
@@ -90,10 +81,10 @@ class StepsDef{
 
     // input string. isSensitive masks string in logging (good for secrets)
     void send(final String s, final Boolean isSensitive=false){
+        preStep "typing '${(isSensitive) ? ('*' * 16) : s}'"
         if(s?.trim() == 0){
             throwIt 'Cannot send null string'
         }
-        preStep "typing '${(isSensitive) ? ('*' * 16) : s}'"
         AutomationDef.screen.sendKeys(s)
     }
 
@@ -104,10 +95,12 @@ class StepsDef{
 
     // get list of strings
     List<String> extract(final Integer row, final Integer col, final Integer bufferLength, final Integer listLength, final Integer rowIncrement){
-        List<String> l = []
+        List<String> data = []
         preStep "Extracting list of strings with length $bufferLength, from positions $row/$col to ${row + (listLength * rowIncrement)}/$col"
-        return [] // TODO:
-        // TODO: edge checks
+        for(int i = 0; i < listLength; i++){
+            data << extract(row + (i * rowIncrement), col, bufferLength)
+        }
+        return data
     }
 
     // extract string from current (row,col) to (row,col+bufferLength)
@@ -117,11 +110,9 @@ class StepsDef{
 
     // extract string from (row,col) to (bufferLength,y)
     String extract(final Integer row, final Integer col, final Integer bufferLength){
-        String s = ''
+        assertScreenBounds(row, col)
         preStep "Extracting string of length $bufferLength from position $row/$col"
         return getScreenData(row, col, bufferLength)
-        // TODO: edge checks
-        return s
     }
 
     // perform command -> F1-F24
@@ -152,7 +143,7 @@ class StepsDef{
     }
 
     // wait for milliseconds
-    void wait(final Integer ms){
+    void waitms(final Integer ms){
         preStep "Waiting $ms ms..."
         Dsl5250Utils.waitms(ms)
     }
@@ -177,6 +168,7 @@ class StepsDef{
     // check string exists at position row/col
     Boolean check(final String expected, final Integer row, final Integer col){
         preStep "Checking if '$expected' exists at position $row/$col to $row/${col + expected.length()}"
+        assertScreenBounds(row, col + expected.length())
         return expected == getScreenData(row, col, expected.length())
     }
 
@@ -195,6 +187,7 @@ class StepsDef{
             w << screenContents().join('\n')
         }
     }
+
 
     // TODO: move to utils ?
     // get a string at row,col from screen contents
@@ -218,12 +211,24 @@ class StepsDef{
     // throw exception if position (row,col) is out of bounds for current session's screen
     void assertScreenBounds(final Integer row, final Integer col){
         if(!row || !col){
-            throwIt "Cannot position to $row/$col. Position cannot contain null."
+            throwIt "Position at $row/$col cannot contain null."
         } else if(col < 1 || col > AutomationDef.screenWidth){
-            throwIt "Cannot position to $row/$col. Column position out of bounds [1-${AutomationDef.screenWidth}]."
+            throwIt "Position at $row/$col is out of bounds. Column bounds = [1-${AutomationDef.screenWidth}]."
         } else if(row < 1 || row > AutomationDef.screenHeight){
-            throwIt "Cannot position to $row/$col. Row position out of bounds [1-${AutomationDef.screenHeight}]."
+            throwIt "Position at $row/$col is out of bounds. Row bounds = [1-${AutomationDef.screenHeight}]."
         }
+    }
+
+    // log string s
+    void log(final String s){
+        log.info(s)
+    }
+
+    // TODO: move to utils ?
+    // processing before each step
+    void preStep(final String s){
+        AutomationDef.stepIndex++
+        log(s)
     }
 
 }

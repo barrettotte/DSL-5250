@@ -27,6 +27,12 @@ I think I could have taken this project a lot further (this is a super shallow i
 * Download TN5250J jar and place in **libs/**
 
 
+## TODO
+* Mockito and a few tests
+* Extract list 
+* 
+
+
 ## Syntax
 TODO:
 
