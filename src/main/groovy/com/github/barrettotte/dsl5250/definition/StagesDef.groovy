@@ -4,15 +4,15 @@ import static groovy.lang.Closure.DELEGATE_ONLY
 
 import groovy.transform.CompileStatic
 
-import com.github.barrettotte.dsl5250.model.Stage
+import com.github.barrettotte.dsl5250.model.NamedClosure
 
 @CompileStatic
 class StagesDef{
 
-    protected final List<Stage> stages = []
+    protected final List<NamedClosure> stages = []
 
     void stage(final String name, @DelegatesTo(value=StageDef, strategy=DELEGATE_ONLY) final Closure closure){
-        stages << new Stage(name, closure)
+        stages << new NamedClosure(name, closure)
     }
 
 }

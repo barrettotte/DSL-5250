@@ -8,7 +8,7 @@ import groovy.util.logging.Log4j
 
 import com.github.barrettotte.dsl5250.exception.EnvironmentException
 import com.github.barrettotte.dsl5250.model.Environment
-import com.github.barrettotte.dsl5250.model.Stage
+import com.github.barrettotte.dsl5250.model.NamedClosure
 import com.github.barrettotte.dsl5250.utils.Dsl5250Utils
 
 import org.tn5250j.Session5250
@@ -77,7 +77,7 @@ class AutomationDef{
         }
     }
 
-    void runStage(final Stage stage){
+    void runStage(final NamedClosure stage){
         final StageDef dsl = new StageDef()
 
         log.info("==> Running '${stage.name}' stage...")
