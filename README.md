@@ -27,12 +27,6 @@ I think I could have taken this project a lot further (this is a super shallow i
 * Download TN5250J jar and place in **libs/**
 
 
-## TODO
-* Mockito and a few tests
-* Extract list 
-* 
-
-
 ## Syntax
 TODO:
 
@@ -62,3 +56,4 @@ I took a few other approaches before the current implementation, skim through th
 * [IBM Emulator Programming](https://www.ibm.com/support/knowledgecenter/SSEQ5Y_5.9.0/com.ibm.pcomm.doc/books/html/emulator_programming08.htm)
 * [IBM Introduction to Emulator APIs](https://www.ibm.com/support/knowledgecenter/SSEQ5Y_6.0.0/com.ibm.pcomm.doc/books/html/emulator_programming06.htm)
 * [JNA API Documentation](https://java-native-access.github.io/jna/4.2.1/overview-summary.html)
+* [Mockito Behavior](https://www.baeldung.com/mockito-behavior)

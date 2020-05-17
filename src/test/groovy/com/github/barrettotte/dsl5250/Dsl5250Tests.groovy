@@ -5,13 +5,16 @@ import com.github.barrettotte.dsl5250.definition.AutomationDef
 import com.github.barrettotte.dsl5250.definition.StepsDef
 import com.github.barrettotte.dsl5250.utils.Dsl5250Utils
 
+import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.Test
+
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
 
-import org.junit.jupiter.api.extension.ExtendWith
-import org.junit.jupiter.api.Test
+import org.tn5250j.Session5250
+import org.tn5250j.framework.tn5250.Screen5250
 
 @ExtendWith(MockitoExtension.class)
 class Dsl5250Tests{
@@ -22,9 +25,14 @@ class Dsl5250Tests{
     @Mock
     private AutomationDef automationMock
 
-    
+    @Mock
+    private Session5250 sessionMock
 
-    //@Test
+    @Mock
+    private Screen5250 screenMock
+
+
+    @Test
     void test_eval(){
         final List<String> qrpgleMembers = []
 

@@ -6,12 +6,10 @@ import com.github.barrettotte.dsl5250.exception.Dsl5250Exception
 import java.awt.Dimension
 import java.nio.file.Paths
 
-import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j
 
 import org.codehaus.groovy.runtime.DateGroovyMethods
 
-//@CompileStatic
 @Log4j
 class Dsl5250Utils{
 
