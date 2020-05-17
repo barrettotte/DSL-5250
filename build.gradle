@@ -73,3 +73,4 @@ codenarc{
   configFile = file('config/codenarc/codenarc.xml')
   reportFormat = 'html'
 }
+

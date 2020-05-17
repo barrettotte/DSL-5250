@@ -6,6 +6,7 @@ import static groovy.lang.Closure.DELEGATE_ONLY
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j
 
+import com.github.barrettotte.dsl5250.exception.ConnectionException
 import com.github.barrettotte.dsl5250.exception.EnvironmentException
 import com.github.barrettotte.dsl5250.model.Environment
 import com.github.barrettotte.dsl5250.model.Stage
@@ -33,6 +34,7 @@ class AutomationDef{
     static Integer stepIndex
     static Integer stepsLength
 
+    // load environment closure
     void environment(@DelegatesTo(value=Environment, strategy=DELEGATE_FIRST) final Closure closure){
         env = new Environment()
         env.with(closure)
@@ -41,10 +43,11 @@ class AutomationDef{
         }
     }
 
+    // run each stage closure 
     void stages(@DelegatesTo(value=StagesDef, strategy=DELEGATE_ONLY) final Closure closure){
         session = connect(env)
         log.info('Session connected')
-        
+
         screen = session.getScreen()
         screenWidth = screen.getColumns()
         screenHeight = screen.getRows()
@@ -54,10 +57,8 @@ class AutomationDef{
         closure.resolveStrategy = DELEGATE_ONLY
         closure.call()
 
-        Boolean hadException = false
-        Exception rethrow = null
-
         stageIndex = 1
+        Exception rethrow = null
         try{
             dsl.stages?.each{stage->
                 stageName = stage.name
@@ -72,11 +73,10 @@ class AutomationDef{
             session?.disconnect()
             log.info('Session disconnected')
         }
-        if(rethrow){
-            throw rethrow
-        }
+        if(rethrow) throw rethrow
     }
 
+    // run stage closure
     void runStage(final Stage stage){
         final StageDef dsl = new StageDef()
 
@@ -101,6 +101,10 @@ class AutomationDef{
 			Thread.sleep(100)
 		}
         Thread.sleep(500)
+
+        if(!s.isConnected()){
+            throw new ConnectionException('Could not connect to 5250 session')
+        }
         return s
     }
 

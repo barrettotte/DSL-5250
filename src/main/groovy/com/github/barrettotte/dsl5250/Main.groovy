@@ -8,12 +8,10 @@ import groovy.json.JsonSlurper
 public class Main{
 
     static void main(String[] args){ 
-        final Dsl5250 dsl = new Dsl5250()
         final config = new JsonSlurper().parse(new File(this.getClass().getResource('/config.json').toURI()))
-        
         final List<String> qrpgleMembers = []
 
-        dsl.eval{
+        Dsl5250.eval{
             environment{
                 outputPath = 'out'
                 host = config['host']
