@@ -17,4 +17,11 @@ class Dsl5250Utils{
         return new GroovyShell().evaluate('return ' + f.text)
     }
 
+    static void waitms(final Integer ms){
+        if(ms < 1){
+            throw new Exception("Invalid wait time '$ms'ms")
+        }
+        Thread.sleep(ms)
+    }
+
 }

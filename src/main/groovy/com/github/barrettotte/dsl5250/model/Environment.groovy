@@ -11,6 +11,5 @@ class Environment{
     
     Integer telnet = 23      // default telnet port
     Integer codePage = 37    
-    Integer timeout = 2500   // ms
     String outputPath = '.'  // output path for screen captures
 }

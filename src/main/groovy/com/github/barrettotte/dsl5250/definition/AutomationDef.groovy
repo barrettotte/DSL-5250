@@ -45,7 +45,6 @@ class AutomationDef{
         session = connect(env)
         log.info('Session connected')
         
-
         screen = session.getScreen()
         screenWidth = screen.getColumns()
         screenHeight = screen.getRows()
@@ -56,6 +55,8 @@ class AutomationDef{
         closure.call()
 
         Boolean hadException = false
+        Exception rethrow = null
+
         stageIndex = 1
         try{
             dsl.stages?.each{stage->
@@ -65,15 +66,14 @@ class AutomationDef{
                 stageIndex++
             }
         } catch(final Exception ex){
-            hadException = true
+            rethrow = ex
             log.info(ex as String)
         } finally{
             session?.disconnect()
             log.info('Session disconnected')
         }
-
-        if(hadException){
-            throw new Exception("Encountered exception in stage '$stageName'; step $stepIndex")
+        if(!rethrow){
+            throw rethrow
         }
     }
 

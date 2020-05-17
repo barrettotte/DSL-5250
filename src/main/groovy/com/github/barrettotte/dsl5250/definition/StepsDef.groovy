@@ -6,6 +6,7 @@ import org.tn5250j.framework.tn5250.Screen5250
 import com.github.barrettotte.dsl5250.constant.Key
 import com.github.barrettotte.dsl5250.exception.StepException
 import com.github.barrettotte.dsl5250.model.Environment
+import com.github.barrettotte.dsl5250.utils.Dsl5250Utils
 
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j
@@ -16,21 +17,30 @@ import org.codehaus.groovy.runtime.DateGroovyMethods
 @CompileStatic
 class StepsDef{
 
+    // TODO: move to utils ?
+    // processing before each step
+    void preStep(final String s){
+        AutomationDef.stepIndex++
+        log.info(s)
+    }
+    // preStep, postStep ?
+    // make a model like how Stage works ?
+
     // get current row
     Integer row(){
-        logStep 'Fetching current row'
+        preStep 'Fetching current row'
         return AutomationDef.screen.getCurrentRow()
     }
 
     // get current column
     Integer col(){
-        logStep 'Fetching current column'
+        preStep 'Fetching current column'
         return AutomationDef.screen.getCurrentCol()
     }
 
     // get cursor position as (row,col)
     Map<String, Integer> position(){
-        logStep "Fetching cursor position"
+        preStep "Fetching cursor position"
         return [
             row: AutomationDef.screen.getCurrentRow(), 
             col: AutomationDef.screen.getCurrentCol()
@@ -50,25 +60,26 @@ class StepsDef{
     // set cursor position to row,col (1,1 offset)
     void position(final Integer row, final Integer col){
         assertScreenBounds(row, col)
-        logStep "Positioning cursor to $row/$col"
+        preStep "Positioning cursor to $row/$col"
         AutomationDef.screen.setCursor(row, col)
     }
 
     // get number of rows on screen
     Integer height(){
-        logStep 'Fetching screen height'
+        preStep 'Fetching screen height'
         return AutomationDef.screenHeight
     }
 
     // get number of columns on screen
     Integer width(){
-        logStep 'Fetching screen width'
+        preStep 'Fetching screen width'
         return AutomationDef.screenWidth
     }
 
-    // reposition cursor and input string
+    // reposition cursor and input string s
     void send(final int row, final int col, final String s, final Boolean isSensitive=false){
         position(row, col)
+        Dsl5250Utils.waitms(250)
         send(s, isSensitive)
     }
 
@@ -82,7 +93,7 @@ class StepsDef{
         if(s?.trim() == 0){
             throwIt 'Cannot send null string'
         }
-        logStep "typing '${(isSensitive) ? ('*' * 16) : s}'"
+        preStep "typing '${(isSensitive) ? ('*' * 16) : s}'"
         AutomationDef.screen.sendKeys(s)
     }
 
@@ -94,7 +105,7 @@ class StepsDef{
     // get list of strings
     List<String> extract(final Integer row, final Integer col, final Integer bufferLength, final Integer listLength, final Integer rowIncrement){
         List<String> l = []
-        logStep "Extracting list of strings with length $bufferLength, from positions $row/$col to ${row + (listLength * rowIncrement)}/$col"
+        preStep "Extracting list of strings with length $bufferLength, from positions $row/$col to ${row + (listLength * rowIncrement)}/$col"
         return [] // TODO:
         // TODO: edge checks
     }
@@ -107,7 +118,8 @@ class StepsDef{
     // extract string from (row,col) to (bufferLength,y)
     String extract(final Integer row, final Integer col, final Integer bufferLength){
         String s = ''
-        logStep "Extracting string of length $bufferLength from position $row/$col"
+        preStep "Extracting string of length $bufferLength from position $row/$col"
+        return getScreenData(row, col, bufferLength)
         // TODO: edge checks
         return s
     }
@@ -117,14 +129,16 @@ class StepsDef{
         if(i < 1 || i > 24){
             throwIt "Invalid command key '$i'."
         }
-        logStep "Command $i (F$i)"
+        preStep "Command $i (F$i)"
         AutomationDef.screen.sendKeys("[pf$i]")
+        Dsl5250Utils.waitms(500)
     }
 
     // press a key
     void press(final Key key){
-        logStep "Pressing $key key"
+        preStep "Pressing $key key"
         AutomationDef.screen.sendKeys(key.code)
+        Dsl5250Utils.waitms(500)
     }
 
     // press a key - by string instead of enum
@@ -138,29 +152,32 @@ class StepsDef{
     }
 
     // wait for milliseconds
-    void waitms(final Integer ms){
-        try{
-            if(ms < 0){
-                throwIt "Invalid wait time. Cannot wait $ms ms."
-            }
-            logStep "Waiting $ms ms..."
-            Thread.sleep(ms)
-        } catch(final InterruptedException ex){
-            // Thread.currentThread().interrupt()
-        }
+    void wait(final Integer ms){
+        preStep "Waiting $ms ms..."
+        Dsl5250Utils.waitms(ms)
     }
 
     // wait until string appears at specified position row/col or timeout
-    void waitUntil(final String s, final Integer row, final Integer col){
-        logStep "Waiting for '$s' to appear at position $row/$col"
-        // TODO:
+    void waitUntil(final String s, final Integer row, final Integer col, final Integer timeout=1000, final Integer retry=3){
+        preStep "Waiting for '$s' to appear at position $row/$col"
+        int i = 0
+        boolean foundIt = false
+        while(i < retry && !foundIt){
+            if(check(s, row, col)){
+                foundIt = true
+            }
+            Dsl5250Utils.waitms(timeout)
+            i++
+        }
+        if(!foundIt){
+            throw new StepException("Timed out $retry time(s) waiting to see '${s}' at position $row/$col")
+        }
     }
 
     // check string exists at position row/col
     Boolean check(final String expected, final Integer row, final Integer col){
-        logStep "Checking if '$expected' exists at position $row/$col to $row/${col + expected.length()}"
-        final String actual = screenContents()[row-1].substring(col-1).take(expected.length())
-        return expected == actual
+        preStep "Checking if '$expected' exists at position $row/$col to $row/${col + expected.length()}"
+        return expected == getScreenData(row, col, expected.length())
     }
 
     // write screen contents to file, using default naming convention
@@ -179,22 +196,25 @@ class StepsDef{
         }
     }
 
+    // TODO: move to utils ?
+    // get a string at row,col from screen contents
+    String getScreenData(final Integer row, final Integer col, final Integer len){
+        return screenContents()[row-1].substring(col-1).take(len)
+    }
+
+    // TODO: move to utils ?
     // get screen contents split into rows
     List<String> screenContents(){
         return (AutomationDef.screen.getScreenAsChars() as String).split("(?<=\\G.{${AutomationDef.screenWidth}})") as List<String>
     }
 
-    // log each step
-    void logStep(final String s){
-        AutomationDef.stepIndex++
-        log.info(s)
-    }
-
+    // TODO: move to utils ?
     // wrapper to throw a StepException
     void throwIt(final String s){ 
         throw new StepException("stage '${AutomationDef.stageName}'; step${AutomationDef.stepIndex} -> $s")
     }
 
+    // TODO: move to utils ?
     // throw exception if position (row,col) is out of bounds for current session's screen
     void assertScreenBounds(final Integer row, final Integer col){
         if(!row || !col){

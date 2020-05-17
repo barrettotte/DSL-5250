@@ -10,7 +10,6 @@ public class Main{
     static void main(String[] args){ 
         final Dsl5250 dsl = new Dsl5250()
         final config = new JsonSlurper().parse(new File(this.getClass().getResource('/config.json').toURI()))
-
         String firstLib
 
         dsl.eval{
@@ -29,45 +28,46 @@ public class Main{
                         position 7,53
                         send env.password,true  // true -> mask in log
                         press Key.ENTER
-                        waitms 2500
+                        wait 2500
                         if(check('Display Program Messages',1,28) || check('Display Messages',1,33)){
                             press Key.ENTER
-                            waitms 1000
+                            wait 1000
                         }
                         capture()
-                        waitms 1000
+                        wait 1000
                     }
                 }
-                // stage('DSPLIBL'){
-                //     steps{
-                //         position 20,7
-                //         send 'DSPLIBL'
-                //         press Key.ENTER
-                //         waitms 1000
-                //         capture()        
-                //         cmd 12
-                //         waitms 1000
-                //     }
-                // }
-                // stage('WRKMBRPDM'){
-                //     steps{
-                //         position 20,7
-                //         send 'WRKMBRPDM BOLIB/QRPGLESRC'
-                //         press Key.ENTER
-                //         waitms 1000
-                //         capture()
-                //         // while(!check('Bottom',19,73)) liblist << (subfile contents)
-                //     }
-                // }
-                // stage('LOGOFF'){
-                //     steps{
-                //         position 20,7
-                //         send 'SIGNOFF'
-                //         press Key.ENTER
-                //         waitms 1000
-                //         capture()
-                //     }
-                // }
+                stage('DSPLIBL'){
+                    steps{
+                        send 20,7,'DSPLIBL'
+                        press Key.ENTER
+                        waitms 1000
+                        capture()        
+                        cmd 12
+                        wait 1000
+                    }
+                }
+                stage('WRKMBRPDM'){
+                    steps{
+                        position 20,7
+                        send 'WRKMBRPDM BOLIB/QRPGLESRC'
+                        press Key.ENTER
+                        waitms 1000
+                        capture()
+                        cmd 3
+                        wait 1000
+                        // while(!check('Bottom',19,73)) liblist << (subfile contents)
+                    }
+                }
+                stage('LOGOFF'){
+                    steps{
+                        position 20,7
+                        send 'SIGNOFF'
+                        press Key.ENTER
+                        wait 1000
+                        capture()
+                    }
+                }
             }
         }
 
