@@ -1,9 +1,13 @@
 package com.github.barrettotte.dsl5250.constant
 
-// Groovy version of 
+// Groovy version of
 //   https://github.com/terminaldriver/terminaldriver/blob/master/src/main/java/com/terminaldriver/tn5250j/obj/Key.java
 
+import groovy.transform.CompileStatic
+
+@CompileStatic
 enum Key{
+
     ATTENTION('[attn]'),
 	SYSTEM_REQUEST('[sysreq]'),
 	RESET('[reset]'),
@@ -34,6 +38,7 @@ enum Key{
 
     String code
     Key(final String code){
-        this.code= code
+        this.code = code
     }
+
 }

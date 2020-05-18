@@ -12,29 +12,29 @@ class StepsDef{
     // get current row
     Integer row(){
         Dsl5250Utils.preStep 'Fetching current row'
-        return Dsl5250Utils.getCursorRow()
+        return Dsl5250Utils.cursorRow
     }
 
     // get current column
     Integer col(){
         Dsl5250Utils.preStep 'Fetching current column'
-        return Dsl5250Utils.getCursorCol()
+        return Dsl5250Utils.cursorCol
     }
 
     // get cursor position as (row,col)
     Map<String, Integer> position(){
-        Dsl5250Utils.preStep "Fetching cursor position"
-        return Dsl5250Utils.getCursorPosition()
+        Dsl5250Utils.preStep 'Fetching cursor position'
+        return Dsl5250Utils.cursorPosition
     }
 
     // set current row
     void row(final Integer row){
-        position(row, Dsl5250Utils.getCursorCol())
+        position(row, Dsl5250Utils.cursorCol)
     }
 
     // set current column
     void col(final Integer col){
-        position(Dsl5250Utils.getCursorRow(), col)
+        position(Dsl5250Utils.cursorRow, col)
     }
 
     // set cursor position to row,col (1,1 offset)
@@ -46,13 +46,13 @@ class StepsDef{
     // get number of rows on screen
     Integer height(){
         Dsl5250Utils.preStep 'Fetching screen height'
-        return Dsl5250Utils.getScreenHeight()
+        return Dsl5250Utils.screenHeight
     }
 
     // get number of columns on screen
     Integer width(){
         Dsl5250Utils.preStep 'Fetching screen width'
-        return Dsl5250Utils.getScreenWidth()
+        return Dsl5250Utils.screenWidth
     }
 
     // reposition cursor and input string s
@@ -82,7 +82,7 @@ class StepsDef{
     List<String> extract(final Integer row, final Integer col, final Integer bufferLength, final Integer listLength, final Integer rowIncrement){
         Dsl5250Utils.preStep "Extracting list of strings with length $bufferLength, from positions $row/$col to ${row + (listLength * rowIncrement)}/$col"
         List<String> data = []
-        for(int i = 0; i < listLength; i++){
+        for (int i = 0; i < listLength; i++){
             data << extract(row + (i * rowIncrement), col, bufferLength)
         }
         return data
@@ -90,7 +90,7 @@ class StepsDef{
 
     // extract string from current (row,col) to (row,col+bufferLength)
     String extract(final Integer bufferLength){
-        extract(Dsl5250Utils.getCursorRow(), Dsl5250Utils.getCursorCol(), bufferLength)
+        extract(Dsl5250Utils.cursorRow, Dsl5250Utils.cursorCol, bufferLength)
     }
 
     // extract string from (row,col) to (bufferLength,y)
@@ -135,7 +135,7 @@ class StepsDef{
     // wait until string appears at specified position row/col or timeout
     String waitUntil(final String s, final Integer row, final Integer col, final Integer timeout=1000, final Integer retry=3){
         Dsl5250Utils.preStep "Waiting for '$s' to appear at position $row/$col"
-        for(int i = 0; i < retry; i++){
+        for (int i = 0; i < retry; i++){
             if(check(s, row, col)){
                 return s
             }
@@ -153,7 +153,7 @@ class StepsDef{
 
     // write screen contents to file, using default naming convention
     void capture(){
-        capture(Dsl5250Utils.getDefaultScrapeName())
+        capture(Dsl5250Utils.defaultScrapeName)
     }
 
     // write screen contents to file at file path

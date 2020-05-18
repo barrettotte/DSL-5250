@@ -10,12 +10,10 @@ import com.github.barrettotte.dsl5250.exception.ConnectionException
 import com.github.barrettotte.dsl5250.exception.EnvironmentException
 import com.github.barrettotte.dsl5250.model.Environment
 import com.github.barrettotte.dsl5250.model.Stage
-import com.github.barrettotte.dsl5250.utils.Dsl5250Utils
 
 import org.tn5250j.Session5250
 import org.tn5250j.framework.tn5250.Screen5250
 import org.tn5250j.framework.common.SessionManager
-import org.tn5250j.TN5250jConstants
 
 @Log4j
 @CompileStatic
@@ -48,9 +46,9 @@ class AutomationDef{
         session = connect(env)
         log.info('Session connected')
 
-        screen = session.getScreen()
-        screenWidth = screen.getColumns()
-        screenHeight = screen.getRows()
+        screen = session.screen
+        screenWidth = screen.columns
+        screenHeight = screen.rows
 
         final StagesDef dsl = new StagesDef()
         closure.delegate = dsl
@@ -60,13 +58,13 @@ class AutomationDef{
         stageIndex = 1
         Exception rethrow = null
         try{
-            dsl.stages?.each{stage->
+            dsl.stages?.each{stage ->
                 stageName = stage.name
                 stepIndex = 0
                 runStage(stage)
                 stageIndex++
             }
-        } catch(final Exception ex){
+        } catch (final Exception ex){
             rethrow = ex
             log.info(ex as String)
         } finally{
@@ -97,12 +95,12 @@ class AutomationDef{
         final Session5250 s = SessionManager.instance().openSession(props, '', '')
         s.connect()
 
-        for(int i = 1; i < 200 && !s.isConnected(); i++){
+        for (int i = 1; i < 200 && !s.connected; i++){
 			Thread.sleep(100)
 		}
         Thread.sleep(500)
 
-        if(!s.isConnected()){
+        if(!s.connected){
             throw new ConnectionException('Could not connect to 5250 session')
         }
         return s

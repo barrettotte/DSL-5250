@@ -1,13 +1,12 @@
 package com.github.barrettotte.dsl5250
 
-import com.github.barrettotte.dsl5250.Dsl5250
 import com.github.barrettotte.dsl5250.constant.Key
 
 import groovy.json.JsonSlurper
 
-public class Main{
+class Main{
 
-    static void main(String[] args){ 
+    static void main(String[] args){
         final config = new JsonSlurper().parse(new File(this.getClass().getResource('/config.json').toURI()))
         final List<String> qrpgleMembers = []
 
@@ -20,7 +19,7 @@ public class Main{
             }
             stages{
                 stage('LOGIN'){
-                    steps{env->
+                    steps{env ->
                         position 6,53
                         send env.user
                         capture()
@@ -78,4 +77,5 @@ public class Main{
         }
         println 'BOLIB/QRPGLESRC\n' + qrpgleMembers
     }
+
 }

@@ -1,14 +1,12 @@
 package com.github.barrettotte.dsl5250
 
-import static groovy.lang.Closure.DELEGATE_ONLY
-
 import com.github.barrettotte.dsl5250.definition.AutomationDef
 
 import groovy.transform.CompileStatic
 
 @CompileStatic
 class Dsl5250{
-    
+
     static void eval(final File f){
         eval(f.text)
     }

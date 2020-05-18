@@ -3,7 +3,6 @@ package com.github.barrettotte.dsl5250.utils
 import com.github.barrettotte.dsl5250.definition.AutomationDef
 import com.github.barrettotte.dsl5250.exception.Dsl5250Exception
 
-import java.awt.Dimension
 import java.nio.file.Paths
 
 import groovy.util.logging.Log4j
@@ -38,30 +37,30 @@ class Dsl5250Utils{
         }
         try{
             Thread.sleep(ms)
-        } catch(final IllegalMonitorStateException e){
+        } catch (final IllegalMonitorStateException e){
             // just keep going
         }
     }
 
     // get current row from 5250 screen
     static Integer getCursorRow(){
-        return AutomationDef.screen.getCurrentRow()
+        return AutomationDef.screen.currentRow
     }
 
     // get current column from 5250 screen
     static Integer getCursorCol(){
-        return AutomationDef.screen.getCurrentCol()
+        return AutomationDef.screen.currentCol
     }
 
     // get current position (row,col) from 5250 screen
     static Map<String,Integer> getCursorPosition(){
         return [
-            row: AutomationDef.screen.getCurrentRow(), 
-            col: AutomationDef.screen.getCurrentCol()
+            row: AutomationDef.screen.currentRow,
+            col: AutomationDef.screen.currentCol,
         ]
     }
 
-    // set 5250 screen cursor position (row,col) 
+    // set 5250 screen cursor position (row,col)
     static void setCursorPosition(final Integer row, final Integer col){
         assertScreenBounds(row, col)
         AutomationDef.screen.setCursor(row, col)
@@ -76,22 +75,22 @@ class Dsl5250Utils{
     static Integer getScreenWidth(){
         return AutomationDef.screenWidth
     }
-    
+
     // get a string at row,col from screen
     static String scrapeScreen(final Integer row, final Integer col, final Integer len){
-        return scrapeScreen()[row-1].substring(col-1).take(len)
+        return scrapeScreen()[row - 1].substring(col - 1).take(len)
     }
 
     // get screen contents split into rows
     static List<String> scrapeScreen(){
-        return (AutomationDef.screen.getScreenAsChars() as String).split("(?<=\\G.{${AutomationDef.screenWidth}})") as List<String>
+        return (AutomationDef.screen.screenAsChars as String).split("(?<=\\G.{${AutomationDef.screenWidth}})") as List<String>
     }
 
     //
     static String getDefaultScrapeName(){
         final String today = DateGroovyMethods.format(new Date(), 'yyyyMMdd')
-        final String stage = AutomationDef.stageIndex.toString().padLeft(2,'0') + '_' + AutomationDef.stageName.replaceAll('\\s','-')
-        return AutomationDef.env.outputPath + File.separator + today + "_${stage}_step_${AutomationDef.stepIndex.toString().padLeft(3,'0')}.txt"
+        final String stage = AutomationDef.stageIndex.toString().padLeft(2, '0') + '_' + AutomationDef.stageName.replaceAll('\\s', '-')
+        return AutomationDef.env.outputPath + File.separator + today + "_${stage}_step_${AutomationDef.stepIndex.toString().padLeft(3, '0')}.txt"
     }
 
     // enter string in 5250 screen
@@ -103,7 +102,7 @@ class Dsl5250Utils{
     }
 
     // util to throw a DSL exception
-    static void throwIt(final String s){ 
+    static void throwIt(final String s){
         throw new Dsl5250Exception("stage '${AutomationDef.stageName}'; step${AutomationDef.stepIndex} -> $s")
     }
 
@@ -121,8 +120,8 @@ class Dsl5250Utils{
     // save screen contents to file
     static void captureScreen(final String filePath){
         final File f = new File(filePath)
-        f.getParentFile().mkdirs()
-        f.newWriter().withWriter{w->
+        f.parentFile.mkdirs()
+        f.newWriter().withWriter{w ->
             w << scrapeScreen().join('\n')
         }
     }

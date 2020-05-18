@@ -1,5 +1,8 @@
 package com.github.barrettotte.dsl5250.exception
 
+import groovy.transform.CompileStatic
+
+@CompileStatic
 class ConnectionException extends RuntimeException{
 
     ConnectionException(final String msg){
