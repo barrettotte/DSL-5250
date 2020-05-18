@@ -19,24 +19,11 @@ import org.tn5250j.framework.tn5250.Screen5250
 @ExtendWith(MockitoExtension.class)
 class Dsl5250Tests{
 
-    @InjectMocks
-    private Dsl5250 dslMock
-
-    @Mock
-    private AutomationDef automationMock
-
-    @Mock
-    private Session5250 sessionMock
-
-    @Mock
-    private Screen5250 screenMock
-
-
-    @Test
+    //@Test
     void test_eval(){
         final List<String> qrpgleMembers = []
 
-        dslMock.eval{
+        Dsl5250.eval{
             environment{
                 host = 'HOST400'
                 user = 'USER'
@@ -61,8 +48,7 @@ class Dsl5250Tests{
                 stage('DSPLIBL'){
                     steps{
                         send 20,7,'DSPLIBL'
-                        press Key.ENTER
-                        waitms 1000   
+                        waitms 250   
                         cmd 12
                         waitms 1000
                     }

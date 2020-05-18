@@ -31,6 +31,7 @@ class Dsl5250Utils{
         Dsl5250Utils.log(s)
     }
 
+    // sleep for ms milliseconds
     static void waitms(final Integer ms){
         if(ms < 1){
             throw new Exception("Invalid wait time '$ms'ms")
