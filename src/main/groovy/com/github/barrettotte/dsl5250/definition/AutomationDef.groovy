@@ -25,22 +25,7 @@ class AutomationDef{
         closure.delegate = dsl
         closure.resolveStrategy = DELEGATE_ONLY
         closure.call()
-
-        dsl.stages?.each{stage ->
-            Dsl5250.stageName = stage.name
-            Dsl5250.stepIndex = 0
-            runStage(stage)
-            Dsl5250.stageIndex++
-        }
-    }
-
-    // run stage closure
-    void runStage(final Stage stage){
-        log.info("==> Running '${stage.name}' stage...")
-        final StageDef dsl = new StageDef()
-        stage.closure.delegate = dsl
-        stage.closure.resolveStrategy = DELEGATE_ONLY
-        stage.closure.call()
+        dsl.stages?.each{stage -> Dsl5250.runStage(stage)}
     }
 
 }
