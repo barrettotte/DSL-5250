@@ -1,5 +1,6 @@
 package com.github.barrettotte.dsl5250.utils
 
+import com.github.barrettotte.dsl5250.Dsl5250
 import com.github.barrettotte.dsl5250.definition.AutomationDef
 import com.github.barrettotte.dsl5250.exception.Dsl5250Exception
 
@@ -26,7 +27,7 @@ class Dsl5250Utils{
 
     // processing before each step -> TODO: i dont like this...what to do...?
     static void preStep(final String s){
-        AutomationDef.stepIndex++
+        Dsl5250.stepIndex++
         Dsl5250Utils.log(s)
     }
 
@@ -44,36 +45,36 @@ class Dsl5250Utils{
 
     // get current row from 5250 screen
     static Integer getCursorRow(){
-        return AutomationDef.screen.currentRow
+        return Dsl5250.screen.currentRow
     }
 
     // get current column from 5250 screen
     static Integer getCursorCol(){
-        return AutomationDef.screen.currentCol
+        return Dsl5250.screen.currentCol
     }
 
     // get current position (row,col) from 5250 screen
     static Map<String,Integer> getCursorPosition(){
         return [
-            row: AutomationDef.screen.currentRow,
-            col: AutomationDef.screen.currentCol,
+            row: Dsl5250.screen.currentRow,
+            col: Dsl5250.screen.currentCol,
         ]
     }
 
     // set 5250 screen cursor position (row,col)
     static void setCursorPosition(final Integer row, final Integer col){
         assertScreenBounds(row, col)
-        AutomationDef.screen.setCursor(row, col)
+        Dsl5250.screen.setCursor(row, col)
     }
 
     // get 5250 screen height
     static Integer getScreenHeight(){
-        return AutomationDef.screenHeight
+        return Dsl5250.screenHeight
     }
 
     // get 5250 screen width
     static Integer getScreenWidth(){
-        return AutomationDef.screenWidth
+        return Dsl5250.screenWidth
     }
 
     // get a string at row,col from screen
@@ -83,14 +84,14 @@ class Dsl5250Utils{
 
     // get screen contents split into rows
     static List<String> scrapeScreen(){
-        return (AutomationDef.screen.screenAsChars as String).split("(?<=\\G.{${AutomationDef.screenWidth}})") as List<String>
+        return (Dsl5250.screen.screenAsChars as String).split("(?<=\\G.{${Dsl5250.screenWidth}})") as List<String>
     }
 
     //
     static String getDefaultScrapeName(){
         final String today = DateGroovyMethods.format(new Date(), 'yyyyMMdd')
-        final String stage = AutomationDef.stageIndex.toString().padLeft(2, '0') + '_' + AutomationDef.stageName.replaceAll('\\s', '-')
-        return AutomationDef.env.outputPath + File.separator + today + "_${stage}_step_${AutomationDef.stepIndex.toString().padLeft(3, '0')}.txt"
+        final String stage = Dsl5250.stageIndex.toString().padLeft(2, '0') + '_' + Dsl5250.stageName.replaceAll('\\s', '-')
+        return Dsl5250.env.outputPath + File.separator + today + "_${stage}_step_${Dsl5250.stepIndex.toString().padLeft(3, '0')}.txt"
     }
 
     // enter string in 5250 screen
@@ -98,22 +99,22 @@ class Dsl5250Utils{
         if(s?.trim() == 0){
             throwIt 'Cannot send null string'
         }
-        AutomationDef.screen.sendKeys(s)
+        Dsl5250.screen.sendKeys(s)
     }
 
     // util to throw a DSL exception
     static void throwIt(final String s){
-        throw new Dsl5250Exception("stage '${AutomationDef.stageName}'; step${AutomationDef.stepIndex} -> $s")
+        throw new Dsl5250Exception("stage '${Dsl5250.stageName}'; step${Dsl5250.stepIndex} -> $s")
     }
 
     // throw exception if position (row,col) is out of bounds for current session's screen
     static void assertScreenBounds(final Integer row, final Integer col){
         if(!row || !col){
             throwIt "Position at $row/$col cannot contain null."
-        } else if(col < 1 || col > AutomationDef.screenWidth){
-            throwIt "Position at $row/$col is out of bounds. Column bounds = [1-${AutomationDef.screenWidth}]."
-        } else if(row < 1 || row > AutomationDef.screenHeight){
-            throwIt "Position at $row/$col is out of bounds. Row bounds = [1-${AutomationDef.screenHeight}]."
+        } else if(col < 1 || col > Dsl5250.screenWidth){
+            throwIt "Position at $row/$col is out of bounds. Column bounds = [1-${Dsl5250.screenWidth}]."
+        } else if(row < 1 || row > Dsl5250.screenHeight){
+            throwIt "Position at $row/$col is out of bounds. Row bounds = [1-${Dsl5250.screenHeight}]."
         }
     }
 

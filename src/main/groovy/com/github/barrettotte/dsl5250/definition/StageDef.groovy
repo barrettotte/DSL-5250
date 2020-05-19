@@ -2,6 +2,8 @@ package com.github.barrettotte.dsl5250.definition
 
 import static groovy.lang.Closure.DELEGATE_ONLY
 
+import com.github.barrettotte.dsl5250.Dsl5250
+
 import groovy.transform.CompileStatic
 import groovy.transform.stc.ClosureParams
 import groovy.transform.stc.SimpleType
@@ -17,7 +19,7 @@ class StageDef{
 
         closure.delegate = steps
         closure.resolveStrategy = DELEGATE_ONLY
-        closure.call(AutomationDef.env)
+        closure.call(Dsl5250.env)
     }
 
 }
