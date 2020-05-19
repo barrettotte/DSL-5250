@@ -119,7 +119,8 @@ I took a few other approaches before the current implementation, skim through th
 
 
 ## Commands
-* Interactive run (entering masked password) - ```gradlew run --no-daemon```
+* clean build - ```gradlew clean build```
+* run - ```gradlew run```
 
 
 ## References
