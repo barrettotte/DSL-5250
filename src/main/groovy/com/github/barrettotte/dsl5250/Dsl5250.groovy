@@ -15,8 +15,6 @@ import com.github.barrettotte.dsl5250.model.Stage
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log4j
 
-import java.nio.file.Paths
-
 import org.codehaus.groovy.runtime.DateGroovyMethods
 
 import org.tn5250j.Session5250
@@ -44,7 +42,6 @@ class Dsl5250{
     static void eval(@DelegatesTo(strategy=Closure.DELEGATE_FIRST, value=AutomationDef) final Closure closure){
         state = new DslState()
         Exception rethrow = null
-
         try{
             final AutomationDef automation = new AutomationDef()
             closure.resolveStrategy = Closure.DELEGATE_FIRST
@@ -56,7 +53,10 @@ class Dsl5250{
         } finally{
             disconnect()
         }
-        if(rethrow) throw rethrow
+
+        if(rethrow){
+            throw rethrow
+        }
     }
 
     // setup environment and connection

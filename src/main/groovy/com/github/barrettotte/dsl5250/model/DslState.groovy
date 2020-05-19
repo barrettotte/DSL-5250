@@ -13,5 +13,5 @@ class DslState{
     Integer stepsLength
 
     Boolean connected
-    
+
 }

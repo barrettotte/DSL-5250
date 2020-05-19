@@ -8,7 +8,6 @@ import groovy.util.logging.Log4j
 
 import com.github.barrettotte.dsl5250.Dsl5250
 import com.github.barrettotte.dsl5250.model.Environment
-import com.github.barrettotte.dsl5250.model.Stage
 
 @Log4j
 @CompileStatic
@@ -19,7 +18,7 @@ class AutomationDef{
         Dsl5250.setup(closure)
     }
 
-    // run each stage closure 
+    // run each stage closure
     void stages(@DelegatesTo(value=StagesDef, strategy=DELEGATE_ONLY) final Closure closure){
         final StagesDef dsl = new StagesDef()
         closure.delegate = dsl
