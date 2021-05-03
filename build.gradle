@@ -1,11 +1,12 @@
 import java.util.zip.ZipFile
 
 plugins{
+  id 'java'
   id 'groovy'
   id 'codenarc'
   id 'eclipse'
   id 'idea'
-  id 'application' // TODO: temp
+  id 'java-library'
   id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
@@ -16,8 +17,6 @@ ext{
 
 group = 'com.github.barrettotte'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
-mainClassName = 'com.github.barrettotte.dsl5250.Main' // TODO: temp
 
 repositories{
   mavenCentral()

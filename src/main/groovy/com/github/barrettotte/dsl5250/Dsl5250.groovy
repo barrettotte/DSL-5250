@@ -30,15 +30,24 @@ class Dsl5250{
     static Screen5250 screen
     static DslState state
 
+    // evaluate DSL from file
     static void eval(final File f){
         eval(f.text)
     }
 
+    // evaluate DSL from String
     static void eval(final String dsl){
         def c = new GroovyShell().evaluate('return ' + dsl) as Closure
         eval(c)
     }
 
+    // evaluate DSL using existing groovyshell. This is useful for setting external variables needed in DSL
+    static void eval(final GroovyShell sh, final String dsl){
+        def c = sh.evaluate('return ' + dsl) as Closure
+        eval(c)
+    }
+
+    // evaluate DSL from raw Closure
     static void eval(@DelegatesTo(strategy=Closure.DELEGATE_FIRST, value=AutomationDef) final Closure closure){
         state = new DslState()
         Exception rethrow = null

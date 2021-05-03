@@ -2,8 +2,8 @@
 
 A dummy's approach to making a simple DSL for headless interaction with a 5250 emulator.
 
-
 ## Purpose
+
 This project was used to reinforce my limited knowledge of Groovy and learn how to make a Domain Specific Language (DSL).
 Additionally, 5250 emulator automation seemed like a fascinating topic to screw around with.
 
@@ -14,8 +14,8 @@ testing project built around TN5250J called [Terminal Driver](https://github.com
 
 I think I could have taken this project a lot further (this is a super shallow implementation), but for now I am satisfied with it; Time to move onto the next "shiny".
 
-
 ## DSL Features
+
 * Get and set cursor position
 * Enter strings at position
 * Scrape screen for string or list of strings
@@ -23,12 +23,12 @@ I think I could have taken this project a lot further (this is a super shallow i
 * Check screen position for string
 * Press command keys F1-F24 and other keys ENTER, TAB, ESCAPE, PAGEUP, PAGEDOWN, etc.
 
-
 ## Setup
+
 * Download TN5250J jar and place in **libs/**
 
-
 ## Example DSL
+
 A simple example to showcase various operations the DSL can perform
 ```groovy
   final config = new JsonSlurper().parse(new File(this.getClass().getResource('/config.json').toURI()))
@@ -102,28 +102,28 @@ A simple example to showcase various operations the DSL can perform
   println 'BOLIB/QRPGLESRC\n' + qrpgleMembers
 ```
 
-
 ## Approach
+
 I took a few other approaches before the current implementation, skim through them in [dev/approaches](dev/approaches). Here is the outline:
 1. JNA and EHLAPI32.dll - **failed**
 2. JRuby and EHLAPI32.dll - **failed**
 3. JNA and Win32 Programming - **barely worked...abandoned**
 4. TN5250J - **current**
 
-
 ## Possible Enhancements
+
 * Set and get field by name
 * Smarter field traversing - next,prev,first,last
 * HOD macro generation
 * Image screenshots
 
-
 ## Commands
-* clean build - ```gradlew clean build```
+
+* clean build - ```gradlew clean shadowjar```
 * run - ```gradlew run```
 
-
 ## References
+
 * [Groovy Domain Specific Languages](http://docs.groovy-lang.org/docs/latest/html/documentation/core-domain-specific-languages.html)
 * [Groovy DSL Builders](https://medium.com/@musketyr/groovy-dsl-builders-1-the-concept-2d5a97fa0a51)
 * [IBM Emulator Programming](https://www.ibm.com/support/knowledgecenter/SSEQ5Y_5.9.0/com.ibm.pcomm.doc/books/html/emulator_programming08.htm)
